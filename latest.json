@@ -1,0 +1,7 @@
+{
+    "_comment": "ZENIT HYPERTUNE update manifest - repo root. App polls the raw URL once per day.",
+    "version": "8.6.0",
+    "url": "https://github.com/DonJackpoto/Hypertune/releases/download/v8.6.0/Hypertune_Setup_8.6.0.exe",
+    "notes": "ZENIT Hypertune v8.6.0",
+    "critical": false
+}
