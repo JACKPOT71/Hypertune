@@ -8,6 +8,8 @@
 
 `v8.6.8` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
+**[📸 View the screenshot gallery](SCREENSHOTS.md)**
+
 </div>
 
 ---
