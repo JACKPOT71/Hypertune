@@ -102,7 +102,7 @@ Your settings, snapshots and profiles live in `%LOCALAPPDATA%` and survive updat
 
 ### Antivirus notice
 
-Hypertune uses an open-source kernel driver (WinRing0 family) for protected hardware register access. Because the same capability is used by malware, antivirus engines flag it generically. It is not; see [DEFENDER_HINWEIS.txt](DEFENDER_HINWEIS.txt) for the full reasoning, or use the one-click exclusion button in the app.
+Hypertune uses an open-source kernel driver (WinRing0 family) for protected hardware register access. Because the same capability is used by malware, antivirus engines flag it generically. It is not — and here is why: the driver is a **public, open-source component** ([WinRing0 on GitHub](https://github.com/GermanAizek/WinRing0)) that monitoring tools like Open Hardware Monitor have used for years. Hypertune uses it solely to read and write your own hardware's configuration registers. For details on why pattern-based AV engines flag it anyway, use the one-click exclusion button in the app (**Maintenance → Allow in Windows Defender**).
 
 ---
 
@@ -127,8 +127,7 @@ The engine is vendor-aware: Intel and AMD paths are separate, root-port guards p
 | Path | Purpose |
 |---|---|
 | `latest.json` | Update manifest consumed by the in-app update check |
-| `DEFENDER_HINWEIS.txt` | Antivirus classification explanation (DE) |
-| [Releases](https://github.com/JACKPOT71/Hypertune/releases) | Signed setup binaries per version |
+| [Releases](https://github.com/JACKPOT71/Hypertune/releases) | Setup binaries per version, checksum listed in each release |
 
 ---
 
