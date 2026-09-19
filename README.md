@@ -36,6 +36,12 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 - USB controller interrupt tuning on the xHCI level
 - All writes verified. All failures reported honestly — if the platform refuses a write, the log says so, in plain words. No silent fallback to stock.
 
+### Process layer (Game Mode)
+- Foreground-aware background control: when a game from your editable game list takes focus, background noise (launchers, overlays, updaters) is suspended — and resumed the moment you switch away
+- Everything is journaled after every state change; a crash guard resumes anything still suspended on the next start. Nothing is ever terminated.
+- A hard blocklist protects system processes, the game itself and anti-cheat components — they are never touched, by design.
+- Optional Efficiency-Mode power throttling on the suspended set for extra headroom
+
 ### Network layer (S.U.C.K. Protocol)
 - Hardened network stack engine with **Apply → Verify → Diff** cycle: every value is compared live after application, deviations are reported per key
 - Vendor-aware profiles (Realtek / Intel), including deep adapter-specific latency profiles for modern Realtek 2.5G NICs (RTL8125/8126 family) — available as a selectable profile, on/off, with revert
@@ -121,6 +127,21 @@ Every write is preceded by a snapshot; the Security Center lists them all. Resto
 
 **Does it work on my hardware?**
 The engine is vendor-aware: Intel and AMD paths are separate, root-port guards protect mismatched boards, unsupported features report "unsupported" instead of guessing. The *Prerequisites* chapter in the Help Manual documents exactly what each feature needs.
+
+---
+
+## What Hypertune will never do
+
+This project has hard boundaries. No exception, no "experimental" flag, no future release will cross them:
+
+- **No DLL injection.** Hypertune never writes code into another process's address space.
+- **No function hooking.** No patching of other processes' imports or code paths.
+- **No memory manipulation of other processes.** Your game's memory is your game's business.
+- **No modification of game files.** Nothing in a game installation is patched, unpacked or rebuilt.
+- **No simulated input.** No macros, no automation, nothing a game could read as bot behavior.
+- **No anti-cheat evasion.** Nothing here is designed to hide from detection — because there is nothing to detect.
+
+Why this matters: Hypertune configures **your own hardware and operating system** — the state your machine is in *before* a game starts, not what happens *inside* a game while it runs. Configuration is not manipulation. That distinction is why the answer to "will I get banned?" is the same today as it will be in every future release: the tool does nothing anti-cheat systems look for, and we intend to keep it exactly that way.
 
 ---
 
