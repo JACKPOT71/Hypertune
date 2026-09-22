@@ -1,8 +1,8 @@
 {
     "_comment": "ZENIT HYPERTUNE update manifest - repo root. App polls the raw URL once per day. sha256 = SHA256 of the setup exe (Smart Update verifies it before starting the installer).",
-    "version": "8.6.8",
-    "url": "https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.8/Hypertune_Setup_8.6.8.exe",
-    "notes": "ZENIT Hypertune v8.6.8",
+    "version": "8.6.10",
+    "url": "https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.10/Hypertune_Setup_8.6.10.exe",
+    "notes": "ZENIT Hypertune v8.6.10",
     "critical": false,
-    "sha256": "9b8bb0739ff97afe66d879b3489178c87ddc627c499921f154a874364ba95603"
+    "sha256": "36c68946de1c9d82f8c62395145b653f249c5cf83d99c875aeede6d05010ceda"
 }
