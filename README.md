@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.11` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.12` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
