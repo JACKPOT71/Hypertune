@@ -91,7 +91,7 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 
 ---
 
-## Release Notes v8.6.10
+## Release Notes v8.6.12
 
 **Game Launch & frame limiter**
 - New Game Launch card: one-click full-session apply with readiness checklist and smart launch continuation
