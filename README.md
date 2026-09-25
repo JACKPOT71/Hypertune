@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.12` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.13` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -91,7 +91,7 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 
 ---
 
-## Release Notes v8.6.12
+## Release Notes v8.6.13
 
 **Game Launch & frame limiter**
 - New Game Launch card: one-click full-session apply with readiness checklist and smart launch continuation
