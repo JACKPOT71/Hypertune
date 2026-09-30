@@ -1,0 +1,43 @@
+WHY WINDOWS DEFENDER COMPLAINS - AND WHY THAT IS OKAY
+======================================================
+
+In short: Hypertune uses the kernel driver "WinRing0" to read and write
+MSR and PCI registers of your hardware directly. Ring-0 access is exactly
+the capability malware abuses too, so Defender classifies drivers like
+WinRing0 generically as a "Hacktool" - not because something happened,
+but because it COULD.
+
+Facts:
+* WinRing0 is a long-published open-source driver (OpenLibSys) that has
+  been shipping in well-known hardware monitoring tools for years.
+* Hypertune uses it solely to read and write hardware registers (MSR,
+  PCI configuration space). It installs no services that send data, no
+  autostart entries beyond the documented boot task, and downloads
+  nothing from the internet.
+* Every write is read back and verified afterwards (visible in the
+  startup log).
+
+What Defender can do:
+* Show a warning on first start or quarantine the driver. The driver is
+  then missing and the app reports "Neither the WinRing0 kernel driver
+  nor Rw.exe could be initialized."
+
+The fix (one click):
+1. Install Hypertune.
+2. Start the app -> "Maintenance" page -> button "Allow in Windows
+   Defender".
+   (The v8.6.8+ installer already attempts this exclusion automatically
+   during installation.)
+3. Alternatively, manually: Windows Security -> Virus & threat
+   protection -> Manage settings -> Exclusions -> Add folder ->
+   C:\Program Files\Hypertune
+
+Good to know:
+* The exclusion applies to this folder only, not to the whole system.
+* If you prefer not to add the exclusion, Hypertune still works - but
+  after a Defender quarantine event the hardware tweaks may have to be
+  re-applied.
+* Skeptics can audit the driver source code here:
+  https://github.com/GermanAizek/WinRing0
+
+As of: v8.6.8 (2026-09-18)

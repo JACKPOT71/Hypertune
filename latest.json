@@ -1,0 +1,9 @@
+{
+    "_comment": "ZENIT HYPERTUNE update manifest - repo root. App polls the raw URL once per day. sha256 = SHA256 of the setup exe; sig = Ed25519 signature over this manifest (signing.py). The app trusts a manifest only with a valid signature - without one it offers nothing, because url and sha256 come from the same unsigned file and would otherwise vouch for each other.",
+    "version": "8.6.27",
+    "url": "https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.27/Hypertune_Setup_8.6.27.exe",
+    "notes": "### The License button opens its door again\n\n#### Fixed\n- **The License button in the lower sidebar opens the license page again.** The click had stopped working in v8.6.26; this release restores it. Nothing else was changed.\n\n#### Release\n- The installer is built and the manifest is signed. Please verify the SHA-256 of the installer and the signature of the manifest against the release page before installing.",
+    "critical": false,
+    "sha256": "438d5dce47c4ad13e5b1f70b3345167ba92b1a119e548d78e52a6ac582c475de",
+    "sig": "74aaa1f2db3e313cc9113139522ac7793dfafcb6fb4695d8c7ee15e83e3a146a542819c7932deae2b8cd69e96e2330e4b4dd70f169798262d6175870101f7b01"
+}
