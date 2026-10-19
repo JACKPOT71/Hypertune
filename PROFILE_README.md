@@ -12,6 +12,8 @@ I build low-level Windows performance tooling — the kind that talks to hardwar
 
 One application, every latency layer: CPU delivery, PCIe bus configuration, GPU clock management, network stack hardening (S.U.C.K. Protocol) and timer verification. Scan → apply → verify → persist, with honest per-core reporting and snapshot-based rollback.
 
+**Latest release: [v8.6.29](https://github.com/JACKPOT71/Hypertune/releases/tag/v8.6.29)** — the saved start chain now keeps the profile's ports across reboots.
+
 *(From batch scripts to a product — the repos below are the excavation site.)*
 
 ---
