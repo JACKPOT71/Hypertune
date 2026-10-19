@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.27` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.29` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -67,13 +67,19 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 
 ---
 
-## v8.6.27 Release Notes
+## Release Notes v8.6.29
 
-**License button**
-- The License button in the lower sidebar opens the license page again. The click had stopped working in v8.6.26; this release restores it. Nothing else was changed.
+- Applying a profile no longer rewrites the saved start chain with a shorter port list. The chain is treated as the profile's own: the nine RX High Priority ports and the fourteen device addresses survive a reboot even when the chain was written before the apply.
+- An explicit **Apply Everything** always runs. A rocker that already shows ON is a state, not a reason to swallow the click — the session starts exactly once.
+- RX High Priority writes the ports the profile names instead of filling all 128 slots with guessed values. A range is only written when it fits completely; live ports from a running game are used for that session and never saved.
+- A/B effect checks now report measured CPU energy and average power when a trustworthy hardware energy counter is available; the source is named and unsupported counters remain explicitly unavailable.
+- The read-only hardware-register catalogue now contains 56 entries, checked against the relevant processor documentation.
+- Network-setting removals now require a successful read-back before they are reported as complete.
+
+See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
 <details>
-<summary><strong>Release Notes v8.6.8</strong></summary>
+<summary><strong>v8.6.8 release notes</strong></summary>
 
 **Software update system**
 - Smart Update: the app downloads the official installer, verifies its SHA-256 checksum and launches it. No browser roundtrip, no manual hash comparison. The application closes itself; all settings survive the update.
@@ -91,6 +97,8 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 - Live version display in the sidebar (red, always visible) and in the window title.
 - Additional maintenance shortcut for Defender exclusion handling.
 
+</details>
+
 <details>
 <summary><strong>Full prerequisite list (target machine)</strong></summary>
 
@@ -101,8 +109,6 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 | BIOS: CFG Lock disabled | Intel platforms only | BIOS-locked registers reject low-power-state writes; the engine detects and reports this |
 | Memory Integrity (HVCI) disabled | Windows 11 only | HVCI enforces the Microsoft vulnerable-driver blocklist; irrelevant on Windows 10 |
 | Realtek RTL8125/8126 NIC | Deep latency profile only | All other features are vendor-independent |
-
-</details>
 
 </details>
 
