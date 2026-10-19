@@ -1,12 +1,21 @@
 # Changelog
 
 All notable changes to Hypertune are documented here. Versions are newest first. Dates follow the GitHub release tags.
+## 8.6.29 — 2026-10-20
+### Fixed
+- **Applying a profile no longer shortens the saved start chain.** The chain is written once and then treated as the profile's own: a later apply re-reads it instead of rebuilding it from a scan, so the nine RX High Priority ports and the fourteen device addresses stay in the BAT across reboots
+- **An explicit Apply Everything is never swallowed.** The rocker's position is a state, not a click filter: pressing the button always starts exactly one session, even when it already shows ON
+- **A network value that cannot be read back is no longer counted as removed.** For a removal, "not set" is the desired result — and a refused read used to look exactly the same. Unverifiable removals are now reported as unverified instead of successful
+### Changed
+- **RX High Priority writes the profile's ports, not a guessed block.** The old template filled all 128 slots with the beginning of the UDP range, covering 119 of 53,001 ports. A range is now written only when it fits completely; otherwise the profile's fixed ports are used. Ports of a running game are read live, used for that session and never saved
+### Added
+- **Energy and average power in every A/B check**, read from a probed hardware counter and named per row (`AMD L3/CCD`, `Intel Package`, `Intel DRAM`, or "not available"). Unsupported hardware reports "not available" instead of a number
+- **Read-only register catalogue grown to 56 entries**, each field checked against the processor documentation for the exact CPU. Catalogue only — the app writes none of them
 
 ## 8.6.27 — 2026-09-30
 
 ### Fixed
 - **The License button opens the license page again.** The click had stopped working in 8.6.26; this release restores it. No other changes
-
 
 ## 8.6.26 — 2026-09-30
 
@@ -16,7 +25,6 @@ All notable changes to Hypertune are documented here. Versions are newest first.
 ### Changed
 - **Lower sidebar reads as one blue gradient**: License `#0090B8` → BSoD Guard `#00B8E8` → Repair Driver Service `#00D5FF` → Reboot System `#33EFFF`, each hover one step brighter; the version line closes the gradient in the brightest blue (`#4DF5FF`)
 - **Discord messages are always English** regardless of the suite's UI language; the automatic release announcement carries **@everyone** on the release channel while the main channel stays quiet
-
 
 ## 8.6.25 — 2026-09-30
 
@@ -30,7 +38,6 @@ All notable changes to Hypertune are documented here. Versions are newest first.
 
 ### Fixed
 - **Language switch is honest**: changing language now asks to restart (or explicitly defer) instead of leaving half the interface in the old language — newer pages build their texts only at startup, and the app no longer pretends otherwise
-
 
 ## 8.6.24 — 2026-09-30
 
@@ -46,7 +53,6 @@ All notable changes to Hypertune are documented here. Versions are newest first.
 
 ### Security
 - Manifest remains Ed25519-signed; notes now travel inside the signed manifest, so the Discord embed inherits the same tamper protection as the download URL
-
 
 ## 8.6.10 — 2026-09-23
 
