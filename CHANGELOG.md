@@ -1,6 +1,12 @@
 # Changelog
 
 All notable changes to Hypertune are documented here. Versions are newest first. Dates follow the GitHub release tags.
+## 8.6.30 — 2026-10-20
+### Fixed
+- **The 8.6.29 binary could not start on a 10th-gen Intel CPU.** It ended with `0xC000001D` (`STATUS_ILLEGAL_INSTRUCTION`) before any window appeared. The build targeted the build machine's CPU when compiling, and the linker produced its runtime for that CPU as well: the artifact carried 102 AVX-512 instructions. This build carries none — measured across 15,578 functions and 7.57 M instructions
+- **Compiling and linking now use the same fixed CPU baseline**, so link-time optimisation stays on without bringing the problem back
+- **A failed driver check is reported instead of ending the app silently.** The bundled WinRing0 files are still verified before the first hardware module loads; a failure now shows a message naming the file and writes `crash_entry.txt`, instead of a windowless exit code. The check itself is unchanged
+
 ## 8.6.29 — 2026-10-20
 ### Fixed
 - **Applying a profile no longer shortens the saved start chain.** The chain is written once and then treated as the profile's own: a later apply re-reads it instead of rebuilding it from a scan, so the nine RX High Priority ports and the fourteen device addresses stay in the BAT across reboots
