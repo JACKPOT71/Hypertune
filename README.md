@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.30` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.31` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -66,6 +66,22 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 - GPU module: clock pinning via the official driver interface, NVIDIA control panel restoration, driver hygiene helpers
 
 ---
+
+## Release Notes v8.6.31
+
+**A diagnosis that no longer kills the app - and a stale engine that no longer wins**
+- The "Export diagnostics" button ended the app on a customer machine: window gone, no traceback, not one line in `crash_log.txt`. That is the signature of `QThread: Destroyed while thread is still running` — Qt aborts the process with `qFatal`, without a Python exception, so nothing can log it. The worker reference now falls on `finished`, for the export and the upload, and the busy guard asks `isRunning()`.
+- The two probes that reach into foreign code (NVAPI/DRS in the graphics driver, Win32 window and process queries) run in a child process. A crash or a timeout is now a finding inside the zip instead of a vanished window.
+- The isolated probe writes UTF-8 itself. In this release's own suite run the child printed with the console's code page (cp1252 on German Windows) while the parent read UTF-8, so the zip carried `UnicodeEncodeError` instead of the game-mode probe. The child now sets UTF-8 (`errors="replace"`) before the first character, and the zip names the command that produced each probe.
+- The engine contract checks the signature, not three names. Fifteen steps reported `read_only` as an unexpected keyword and one a missing `apply_realtek_ndis_registry_guard` — that was an old `IMOD-Test.py` answering as the engine. In the built EXE the compiled engine wins; a leftover source file can no longer replace it.
+- 26 subprocess calls in eight modules read their output with `encoding="utf-8", errors="replace"`. A single `0x81` byte killed the reader thread nine times in the customer log, and the caller was left with neither text nor an error.
+- A failed driver check at import is now shown instead of ending the process windowless: a message box naming the file plus `crash_entry.txt`.
+
+**Not verified: the customer's Intel machine itself**
+- The isolation and the worker lifetime are measured in tests and in the build. Whether the button now produces a complete zip *on that machine* can only be confirmed by the zip it sends back.
+
+**This build is unsigned**
+- The setup is unsigned (the build's own artifact carries the suffix `-unsigned`); Windows SmartScreen will warn on first run. Please verify the SHA-256 of the installer and the signature of the manifest against the release page before installing.
 
 ## Release Notes v8.6.30
 
