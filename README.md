@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.29` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.30` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -66,6 +66,14 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 - GPU module: clock pinning via the official driver interface, NVIDIA control panel restoration, driver hygiene helpers
 
 ---
+
+## Release Notes v8.6.30
+
+- The binary no longer requires AVX-512. The 8.6.29 artifact carried 102 AVX-512 instructions, one of them in its startup function; this build carries **0** across 15,578 functions and 7.57 M instructions.
+- Compiling and linking now use the same fixed CPU baseline, so link-time optimisation stays on without bringing the problem back.
+- A failed driver check is reported instead of ending the app silently: a message naming the missing file plus `crash_entry.txt`, instead of a windowless exit code 1. The check itself is unchanged.
+- The installer is unsigned, as 8.6.29 was. Windows SmartScreen will ask for confirmation; the SHA-256 on the release page is the reference.
+
 
 ## Release Notes v8.6.29
 
