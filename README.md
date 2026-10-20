@@ -74,7 +74,6 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 - A failed driver check is reported instead of ending the app silently: a message naming the missing file plus `crash_entry.txt`, instead of a windowless exit code 1. The check itself is unchanged.
 - The installer is unsigned, as 8.6.29 was. Windows SmartScreen will ask for confirmation; the SHA-256 on the release page is the reference.
 
-
 ## Release Notes v8.6.29
 
 - Applying a profile no longer rewrites the saved start chain with a shorter port list. The chain is treated as the profile's own: the nine RX High Priority ports and the fourteen device addresses survive a reboot even when the chain was written before the apply.
