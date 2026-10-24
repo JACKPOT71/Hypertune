@@ -1,52 +1,34 @@
 # 📸 Screenshots
 
-A visual tour of ZENIT HYPERTUNE **v8.6.29** — every page of the application as it runs. Click any image to view it full size.
+Every image is a real window of v8.6.39, captured at 1920×1080. Click one to view it full size.
 
-All screenshots are read-only captures: no tweak was applied to take them. Values come from a live AMD system; your own hardware will differ.
+## Start board
 
-**Jump to:** [Tactical Bento Cockpit](#tactical-bento-cockpit) · [Session & Tuning](#session--tuning) · [CPU & Fabric Lab](#cpu--fabric-lab) · [Network Tweaker](#network-tweaker-suck-protocol) · [GPU & NIP Tweaks](#gpu--nip-tweaks) · [System & Maintenance](#system--maintenance) · [Verification & Documentation](#verification--documentation)
-
-## Tactical Bento Cockpit
 | | |
 |---|---|
-| ![Bento overview](screenshots/01_bento_overview.png)<br>*Live dashboard — scores, cards and quick access* | ![Game Launch](screenshots/01b_bento_game_launch.png)<br>*The command center: apply everything, verify, launch* |
-| ![Hardware radar](screenshots/02_bento_hardware_radar.png)<br>*System hardware radar with per-device live status* | ![Engine configuration](screenshots/03_bento_engine_config.png)<br>*Engine configuration & optimization presets* |
-| ![Hypertune rocker](screenshots/04_bento_rocker.png)<br>*The one-switch Hypertune rocker with hardware clearance* | | |
+| ![Start board](screenshots/01_start_board.png)<br>*One score, one switch, the readiness checklist and Smart Auto-Pilot in one view* | ![Network settings](screenshots/02_network_rss.png)<br>*Receive-side scaling: distribution across cores, presets, live read-back* |
 
-## Session & Tuning
+## Network tweaker (S.U.C.K. Protocol)
+
 | | |
 |---|---|
-| ![Mission Control](screenshots/22_mission_control.png)<br>*Game Mode & Thread Tuner united: one process list, park / throttle / boost* | ![Thread Tuner](screenshots/28_thread_tuner.png)<br>*Process rules with profiles, auto-start rules and shareable JSON* |
-| ![Benchmarks & Advisor](screenshots/29_benchmarks_advisor.png)<br>*CapFrameX import with honest statistics and the frame limit advisor* | ![Live State Probe](screenshots/30_live_state_probe.png)<br>*Read-only register-level proof of what survived the reboot* |
+| ![Advanced adapter](screenshots/03_network_advanced_adapter.png)<br>*Per-adapter offload and interrupt moderation, with a custom value where the driver allows one* | ![Global TCP/IP](screenshots/04_network_global_tcpip.png)<br>*Stack-wide TCP/IP and offload settings* |
 
-## CPU & Fabric Lab
+## Hardware and power
+
 | | |
 |---|---|
-| ![CPU & Fabric Lab](screenshots/05_cpu_fabric_lab.png)<br>*Per-core CPU delivery control with live read-back* | ![Lab protocol log](screenshots/06_cpu_fabric_lab_log.png)<br>*Terminal-style protocol with honest per-core reporting* |
+| ![GPU tweaks](screenshots/05_gpu_tweaks.png)<br>*Frame limiter, clock pinning and driver hygiene — every value read back* | ![Power plans](screenshots/06_power_plans.png)<br>*Power plan import and the timer engine with its measured TSC state* |
+| ![Driver system](screenshots/07_driver_system.png)<br>*Driver service repair, cleanup and runtime maintenance* | ![Software hub](screenshots/09_software_hub.png)<br>*Curated downloads, grouped by purpose* |
 
-## Network Tweaker (S.U.C.K. Protocol)
+## Session control
+
 | | |
 |---|---|
-| ![Advanced adapter](screenshots/07_network_advanced_adapter.png)<br>*Full offload & interrupt moderation control per adapter* | ![Global TCP/IP](screenshots/08_network_global_tcpip.png)<br>*Stack-wide TCP/IP tuning* |
-| ![RSS settings](screenshots/09_network_rss.png)<br>*Receive Side Scaling distribution profiles* | ![Interrupt / MSI](screenshots/10_network_interrupt_msi.png)<br>*Message-signaled interrupts & affinity pinning* |
-| ![AFD sockets](screenshots/11_network_afd_sockets.png)<br>*AFD socket-layer tuning* | ![IP interface](screenshots/12_network_ip_interface.png)<br>*Per-interface configuration* |
-| ![Power saving](screenshots/13_network_power_saving.png)<br>*NIC power management — green mode, EEE, deep sleep* | ![Profiles & presets](screenshots/14_network_profiles.png)<br>*Portable profiles: export, share, import* |
-| ![S.U.C.K. protocol](screenshots/15_network_suck_protocol.png)<br>*Apply → Verify → Diff with snapshot protection* | | |
+| ![Mission Control](screenshots/10_mission_control.png)<br>*One process list, one dial: park, throttle, normalize, boost — journaled and reversible* | ![Thread Tuner](screenshots/11_thread_tuner.png)<br>*A saved rule set per game, applied when the game takes focus* |
 
-## GPU & NIP Tweaks
+## Verification
+
 | | |
 |---|---|
-| ![GPU clock lock](screenshots/16_gpu_clock_lock.png)<br>*NVIDIA Profile Inspector manager, clock pinning, HAGS & ECC* | ![GPU tools](screenshots/17_gpu_tools.png)<br>*Device cleaner, affinity checker, control panel repair* |
-| ![GPU tools (bottom)](screenshots/18_gpu_tools_bottom.png)<br>*NVCleanstall integration & driver hygiene* | | |
-
-## System & Maintenance
-| | |
-|---|---|
-| ![Power plans](screenshots/19_power_plans.png)<br>*Power plans with timer engine & TSC verification* | ![Driver system](screenshots/20_driver_system.png)<br>*Deep cleaner, safe mode switcher, VC++ runtimes* |
-| ![Software Hub](screenshots/21_software_hub.png)<br>*Curated download hub: gaming, multimedia, system tools* | ![Security Center](screenshots/23_security_center.png)<br>*Every snapshot listed, one-click restore* |
-
-## Verification & Documentation
-| | |
-|---|---|
-| ![Win Tweak Verifier](screenshots/24_win_tweak_verifier.png)<br>*Static binary analysis: are registry values actually consumed?* | ![Verifier (Ghidra)](screenshots/25_win_tweak_verifier_ghidra.png)<br>*Deep verification with disassembly cross-references* |
-| ![Help manual](screenshots/26_help_manual.png)<br>*Every feature explained — what it does and how to revert* | ![Tutorial](screenshots/27_help_manual_tutorial.png)<br>*Step-by-step walkthrough built into the app* |
+| ![Win Tweak Verifier](screenshots/08_win_tweak_verifier.png)<br>*Static analysis instead of belief: is a value actually read by the code that should read it?* | |

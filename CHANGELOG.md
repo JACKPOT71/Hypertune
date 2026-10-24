@@ -1,149 +1,154 @@
 # Changelog
 
-All notable changes to Hypertune are documented here. Versions are newest first. Dates follow the GitHub release tags.
-## 8.6.31 — 2026-10-21
+All notable changes to Hypertune are documented here, newest first. This is the public history: it describes what changed for the user, not how it is implemented. Detailed engineering notes stay with the source.
 
-### Fixed
-- **The "Export diagnostics" button no longer ends the app - the worker outlived the slot that reported it.** A customer machine (Intel, 20.10.2026) lost the window on that click, without a traceback and without a line in `crash_log.txt`. That is the signature of `QThread: Destroyed while thread is still running`: Qt ends the process with `qFatal`, without a Python exception, so no handler can log it. `_diag_done` dropped the last reference to the worker while `run()` had not yet returned - the signal is emitted at the end of `run`, not after it. The reference is now dropped on `finished` (`_diag_worker_fertig`, `_diag_upload_worker_fertig`) and `deleteLater` runs there, for the export and the upload; the busy guard asks `isRunning()` instead of "is there an object", so a finished worker cannot lock the next export forever. `tests/test_diagnose_zip_locking.py` now asserts that the reference *stays* in the result slot and is cleared at `finished` - the assertion had pinned the bug before.
-- **The two probes that reach into foreign code run in a child process.** `limiter_status.txt` (NVAPI/DRS in the graphics driver) and `game_mode_probe.txt` (Win32 window/process queries) could kill the process with a native access violation before Python could raise - a `try/except` in the caller never sees that. `diag_export.isolated_probe()` starts them through `_paths.starter_befehl("--subtool", "diagprobe")`, so the child's exit code and reason land in the zip and the window stays. No fallback into the parent process (the isolation exists because that call can kill it), and the 120 s timeout is recorded as a finding. `entry.py` gained the `diagprobe` dispatch for it.
-- **The isolated probe writes UTF-8 itself, not the console's code page.** Found in this release's own suite run: the child process printed with cp1252 (German Windows) while `isolated_probe` read UTF-8, so `game_mode_probe.txt` contained `UnicodeEncodeError: 'charmap' codec can't encode characters ... position 412-413` instead of the game-mode probe. `diag_export.cli_entry` now sets stdout/stderr to UTF-8 (`errors="replace"`) before the first character, and the zip records the command it ran (`aufruf:`) - that line was built but never printed, because the success and crash branches rebuilt the header without it. `tests/test_diag_probe_isolation.py` drives the real `entry.py --subtool diagprobe` path with `PYTHONIOENCODING=cp1252`, so a regression fails the suite instead of a customer's zip.
-- **The engine contract checks the signature, not three names.** The same customer log carried 15 × `TypeError: get_hardware_runner() got an unexpected keyword argument 'read_only'` and once `AttributeError: module 'imod' has no attribute 'apply_realtek_ndis_registry_guard'` - together that is an **old engine** under the name `imod`, one from before the read-only path. The old check asked for three attribute names; an old engine has all three and fails at every later call. `hardware_leser._nimmt_read_only()` now requires `read_only` in the signature (`**kwargs` counts, an unreadable signature is not punished).
-- **In the built EXE the compiled engine wins over a leftover source file.** `entry._lade_engine` and `hardware_leser` preferred `IMOD-Test.py` next to the EXE, so an old source copy from an earlier source installation replaced the shipped engine - `crash_entry.txt` named `C:\Program Files\Hypertune\IMOD-Test.py`. In a frozen build the compiled module wins and the file is only the last resort; on a developer machine the file stays first so a change is visible without a build.
-- **26 subprocess calls in eight modules got a text path for bad bytes.** `sc qc`/`sc query`, `wevtutil el`, `powercfg -import`, `reg import`, the BAT output and the S.U.C.K. chain read with `text=True` and no encoding, i.e. with the ANSI code page. One byte outside it - `0x81`, normal in German Windows output - killed the reader thread: nine times in the customer log, `UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 ... position 635`. The caller then got neither text nor an error. All of them now pass `encoding="utf-8", errors="replace"` (`IMOD-Test.py`, `IMOD_Cleaner.py`, `app_hypertune.py`, `autostart_audit.py`, `diag_export.py`, `driver_doctor.py`, `hardware_leser.py`, `state_probe.py`, plus the single call sites in `net_latency.py`, `revert_safety.py`, `rtl8125_deep.py`, `startpruefung.py`).
-- **A failed driver check at startup is shown instead of ending the app silently.** `entry.py` imports `security_guard` first, and that module verifies the pinned `WinRing0x64.dll`/`WinRing0.sys` **at import** - before `main()` and before any dialog, in an EXE built without a console. Measured on a copy of the release tree without `chiptool/WinRing0x64.dll`: exit code 1, no window, no dialog, indistinguishable from "the app does not start". `_boot_fatal` now writes the traceback to `crash_entry.txt` and shows a message box naming the reason.
+## 8.6.39 - 2026-10-24
 
-### Tests
-- `tests/test_diag_probe_isolation.py` (19 tests, new): the isolation contract (child process is used, crash/timeout/missing start become findings, no parent fallback), the engine signature contract, the compiled-engine precedence, and a source-text contract over every touched subprocess call for the text path.
+### The profile folder carries profiles, not the workshop
 
-## 8.6.30 — 2026-10-20
-### Fixed
-- **The 8.6.29 binary could not start on a 10th-gen Intel CPU.** It ended with `0xC000001D` (`STATUS_ILLEGAL_INSTRUCTION`) before any window appeared. The build targeted the build machine's CPU when compiling, and the linker produced its runtime for that CPU as well: the artifact carried 102 AVX-512 instructions. This build carries none — measured across 15,578 functions and 7.57 M instructions
-- **Compiling and linking now use the same fixed CPU baseline**, so link-time optimisation stays on without bringing the problem back
-- **A failed driver check is reported instead of ending the app silently.** The bundled WinRing0 files are still verified before the first hardware module loads; a failure now shows a message naming the file and writes `crash_entry.txt`, instead of a windowless exit code. The check itself is unchanged
+#### Changed
+- **Four profiles instead of eighteen.** The shipped folder had collected every working copy of the master profile: test builds, superseded iterations, two files that were identical to the default profile and one that carried a single setting. What ships now is `Windows-Default` (the unload target), `14.10.2026` (master with a launch link), `Fortnite_Competitive_22.10.2026` (the active one) and `Auto Fortnite 360` (the Smart Auto-Pilot profile).
+- **Helper files stay behind.** Backup copies, the machine fingerprint and the author's active-profile marker no longer travel; the fingerprint now lists only profiles that exist. The game sessions were cleaned the same way.
 
-## 8.6.29 — 2026-10-20
-### Fixed
-- **Applying a profile no longer shortens the saved start chain.** The chain is written once and then treated as the profile's own: a later apply re-reads it instead of rebuilding it from a scan, so the nine RX High Priority ports and the fourteen device addresses stay in the BAT across reboots
-- **An explicit Apply Everything is never swallowed.** The rocker's position is a state, not a click filter: pressing the button always starts exactly one session, even when it already shows ON
-- **A network value that cannot be read back is no longer counted as removed.** For a removal, "not set" is the desired result — and a refused read used to look exactly the same. Unverifiable removals are now reported as unverified instead of successful
-### Changed
-- **RX High Priority writes the profile's ports, not a guessed block.** The old template filled all 128 slots with the beginning of the UDP range, covering 119 of 53,001 ports. A range is now written only when it fits completely; otherwise the profile's fixed ports are used. Ports of a running game are read live, used for that session and never saved
-### Added
-- **Energy and average power in every A/B check**, read from a probed hardware counter and named per row (`AMD L3/CCD`, `Intel Package`, `Intel DRAM`, or "not available"). Unsupported hardware reports "not available" instead of a number
-- **Read-only register catalogue grown to 56 entries**, each field checked against the processor documentation for the exact CPU. Catalogue only — the app writes none of them
+#### Notes
+- **A serial issued before 19.10.2026 needs one fresh activation** after this update.
 
-## 8.6.27 — 2026-09-30
+## 8.6.38 - 2026-10-24
 
-### Fixed
-- **The License button opens the license page again.** The click had stopped working in 8.6.26; this release restores it. No other changes
+### A profile is one file now - encoded, and it asks before overwriting
 
-## 8.6.26 — 2026-09-30
+#### Added
+- **Central "Share profile" card on the start board.** One dropdown, two buttons, one file: `<name>.hypertune`. The export merges the target profile and the game session, so the user never has to know that two stores exist.
+- **Import asks instead of overwriting.** An existing name offers Replace / Keep as copy / Cancel. Replace writes both stores under the same name; copy keeps the `-2` suffix. An imported profile is selected, not applied.
 
-### Fixed
-- **Sidebar no longer shows "License" twice**: the stray icon-less navigation entry is gone; the License button in the lower sidebar is the only door to the license page (page itself untouched)
+#### Changed
+- **The shared file is encoded**, like the shipped templates. It is no longer a readable recipe, but import still reads the older plain files, so nothing shared before breaks.
+- **Six languages** for the new card.
 
-### Changed
-- **Lower sidebar reads as one blue gradient**: License `#0090B8` → BSoD Guard `#00B8E8` → Repair Driver Service `#00D5FF` → Reboot System `#33EFFF`, each hover one step brighter; the version line closes the gradient in the brightest blue (`#4DF5FF`)
-- **Discord messages are always English** regardless of the suite's UI language; the automatic release announcement carries **@everyone** on the release channel while the main channel stays quiet
+## 8.6.37 - 2026-10-24
 
-## 8.6.25 — 2026-09-30
+### Closing the suite gives the machine back what it borrowed
 
-### Added
-- **Second Discord channel (release channel)**: optional second webhook in the update-notify dialog; releases are announced to both channels with the same formatting and the same signed release text. The once-per-version marker stays shared, so the main channel can never be silenced by a dead second one
-- **Post-update auto-return**: the in-app update runs the installer with /PASSIVE, closes the suite cleanly and the installer's post-install launch brings it back automatically (visible checkbox, no hidden autostart)
+#### Fixed
+- **A browser no longer stays suspended after the suite closes.** The Game Mode watcher could still see the open game during shutdown, suspend the launcher and the browser again - and then the window was gone, so nothing resumed them. The watcher is stopped before the first resume now, and a tick that was already queued returns immediately while the window closes.
+- **The Thread Tuner gives the target process its values back.** Priority, affinity and EcoQoS belong to the browser or the launcher, not to Hypertune. Closing the suite restores what was read before the change; anything that could not be restored is named in the shutdown diagnostics.
 
-### Changed
-- **"Beyond" renamed to "Jackpot" everywhere**: power plan files (`Jackpot_Maximum.pow`, `Jackpot-PERFORMANCE-*.pow`), S.U.C.K. action ids and cmdlets (`jackpot-ndis-global`, `Jackpot-GlobalOffloads`), vendor profiles, help texts and translations. Existing snapshots/journals on disk are untouched
-- **Engine-failure dialog rebuilt**: suite-styled dialog instead of the grey Windows MessageBox, with built-in "Run as administrator" (one-click elevated restart) and "Show details" (opens crash/startup log); duplicate failures within two minutes show exactly one dialog instead of a stack
+#### Changed
+- **The shipped tune profiles are no longer plain text.** They travel encoded and are read through the same path as a customer profile; templates are no longer copied into the data folder on first start.
+- **The start board stops promising twice.** "Optimize (Apply && Save)" is gone - it ran the same scan as the strip below it while the label promised apply and save. The Hyper trophy only appears on a synced machine, and Smart Auto-Pilot sits in the score card.
+- **Unchanged by design:** hardware and registry values written by the boot chain stay persistent. This release restores the process state Game Mode and the Thread Tuner changed.
 
-### Fixed
-- **Language switch is honest**: changing language now asks to restart (or explicitly defer) instead of leaving half the interface in the old language — newer pages build their texts only at startup, and the app no longer pretends otherwise
+## 8.6.36 - 2026-10-23
 
-## 8.6.24 — 2026-09-30
+### IPv6 is measured, not assumed - and the MTU probe can climb again
 
-### Fixed
-- **GPU clock lock verdict falls back to behavioral proof** on drivers without the value read-back channel (610.88 deprecates `clocks.applications.*`): the pin is proven by measurement — clock fixed at the requested value, spread ≤ 2 MHz, plus the driver's "Applications Clocks Setting" throttle reason. A pin at a different value is named; a floating clock stays honestly unverified. The lock mechanism itself is untouched
-- **Frame limiter**: clearing a limit no longer reports "delete did not stick" — the driver's leftover value-0 entry now reads as "no limit set" on both the clear and read path
-- **Quality Self-Check page**: two hard-coded German evidence lines now translate in all seven languages
+#### Fixed
+- **IPv6 is reported instead of rewritten.** The default now measures address, route and echo and leaves the system value alone; replacing it stays an explicit choice.
+- **The MTU probe can climb again.** The probe raises its own ceiling for the measurement, takes the smallest confirmed value, and writes nothing when fewer than two targets answer. IPv6 gets its own MTU, and a revert no longer restores values that were never written.
+- **German Windows no longer blinds the network check.** Five values sat permanently at "not measurable" because the output was translated; the reader now uses the untranslated form and resolves adapters by their device description again.
 
-### Changed
-- Discord update messages embed the full release text from the repository's single source file (`_release_notes.md`) — GitHub release and Discord stay in sync from one edit
-- Discord webhook dialog buttons use the suite's ModernButton style
-- Sidebar version label lightened (`#FF6B85`)
+#### Changed
+- **The sidebar lost two entries** (Quality Self-Check and the separate network bench), the duplicate "Optimize" button is gone, and the header shows the banner.
+- **The setup carries the banner and the portrait**, without which both were blank in every standalone build.
 
-### Security
-- Manifest remains Ed25519-signed; notes now travel inside the signed manifest, so the Discord embed inherits the same tamper protection as the download URL
+## 8.6.33 - 2026-10-22
 
-## 8.6.10 — 2026-09-23
+### The frame limiter reaches the game - and the start check says what it could not measure
 
-### Added
-- **Game Launch card**: one-click full-session apply (network profile, thread tuning, power plan, GPU lock, game mode) with a live readiness checklist and smart launch continuation — the game never starts untuned
-- **Driver-level frame limiter** per game via the NVIDIA driver settings API: no injection, live read-back from the driver, re-verified on every launch, automatic cleanup of orphaned driver entries
-- **Benchmarks card** with CapFrameX capture import, honest statistics (average, 1 % low, latency) and the classified frame limit advisor (grades A–D)
-- **Mission Control**: Game Mode and Thread Tuner united in one process list with park / throttle / boost actions, plus the Game Catcher (live process list, one-click name capture)
-- **Live State Probe card**: read-only, register-level verification of what actually survived the reboot
-- Game artwork shipping with the installer (Fortnite, Valorant; extendable by dropping in JPGs)
-- Thread Tuner profile sharing via strictly validated JSON export/import
+#### Fixed
+- **A 360 FPS cap never arrived at Fortnite.** It was written to the global driver profile, which only applies to applications without a profile of their own. With a resolvable program name the game's own profile is written as well.
+- **The session status measured a different place than the apply wrote to.** Status and apply now read the same place, so a set cap no longer shows as "no limit set".
+- **The limiter no longer blocks the game launch.** A missing cap is a visible hint, not a launch criterion; when the game ends the cap is removed from both places.
+- **The start check no longer hides what it could not measure.** Rows that could not be read stay on the board as hints instead of disappearing and leaving a perfect-looking score.
 
-### Changed
-- Full six-language sweep (EN, DE, FR, ES, RU, ZH): every dashboard card follows the language switch; an automated pairing test now guards it
-- Unified dashboard color language — red is reserved for errors and NOT-GO verdicts
-- Game Session toggle remembers its selection across reboots
-- Latency measurement against selectable targets with live sparkline history
-- Release test battery extended to 22 automated suites
+## 8.6.32 - 2026-10-22
 
-### Fixed
-- Dashboard text freezing in the start language (header status, advisor verdicts, auditor report now retranslate)
-- Update card wording for the up-to-date state and a clearer offline/re-check message in all six languages
+### A saved profile keeps what you changed in the tool
 
-## 8.6.9 — 2026-09
+#### Fixed
+- **A manual change disappeared on the next save.** The profile card wrote the last session snapshot back over the profile. The profile is the authority now; the session only fills keys the profile does not carry yet.
+- **A session save mirrors only what it actually changed.** Unchanged values leave the profile alone, a changed value wins, and a field the session never had does not delete the profile's value.
+- **Auto-Tune keeps a recorded choice** on a second run instead of resetting it to the synthesised base.
+- **Verified manual actions are recorded instead of forgotten** - a proven profile import, a power-plan switch, a Thread-Tuner profile or a Network-Tweaker profile now survive the next save.
+- **Closing the window no longer ends in an error code.** A live probe still running at close was torn out; the probes stop cooperatively now, and the shutdown no longer leaves a crashing thread behind.
 
-### Added
-- Smart Update inside the app: manifest check, installer download, SHA-256 verification before install
-- Red sidebar version display; honest "up to date" update wording
-- Installer registers an optional antivirus exclusion for the installation folder
-- Prerequisites documentation chapter: platform requirements per feature, per vendor
+#### Notes
+- **This build is unsigned.** Windows SmartScreen will warn on first run; verify the SHA-256 of the installer and the signature of the manifest against the release page.
 
-### Fixed
-- Boot engine now reports per-core write acceptance honestly — a refused low-power-state write logs "NOT applied" instead of success
-- Driver diagnostics extended: detects missing-driver-next-to-executable and USB helper-driver conditions with plain-language fixes
-- Frozen-mode path handling: engine, BATs and scheduled task resolve inside the installed layout
+## 8.6.31 - 2026-10-21
 
-## 8.6.8 — 2026-09
+### A diagnosis that no longer kills the app
 
-### Added
-- Checksum-signed update manifest per release; checksum mismatch = hard fail, never a silent install
-- One-click Defender exclusion handling in the maintenance area
+#### Fixed
+- **"Export diagnostics" no longer ends the app.** The worker outlived the slot that reported it; the reference is now released on its finished signal, for the export and the upload, and the busy guard asks whether the worker is still running.
+- **The two probes that reach into foreign code run in a child process.** A crash or a timeout becomes a finding inside the support zip instead of a vanished window.
+- **The isolated probe writes UTF-8 itself**, so a German console code page no longer turns the zip contents into an encoding error.
+- **In the built EXE the compiled engine wins** over a leftover source file next to the executable.
+- **A failed driver check is shown instead of ending the app silently** - a dialog naming the file plus a crash log entry.
 
-### Changed
-- Update card redesign with a single action button and quiet daily polling
+## 8.6.30 - 2026-10-20
 
-## 8.6.7 — 2026-09
+### One activation, and a build that starts on older CPUs
 
-### Fixed
-- WinRing0 driver loading on fresh installs: the driver file now ships next to the executable (Program Files paths with spaces resolved)
-- Game Mode suspension reliability and crash-guard restore on abnormal exit
+#### Notes
+- **Every serial issued before 19.10.2026 must be activated once more.**
 
-## 8.6.6 — 2026-09
+#### Fixed
+- **The binary no longer requires AVX-512.** The build compiler was targeting the build machine's CPU in its link step; a Comet Lake machine died with an illegal instruction before any window appeared. Both pipelines now compile through a baseline wrapper and verify the shipped binary.
 
-### Fixed
-- CPU vendor label on the dashboard reporting the wrong platform on Intel systems
-- Driver service repair flow
+#### Added
+- **Intel network latency coverage was extended** to the interrupts, delay and power-saving fields the detected card family actually documents - and skipped, not guessed, on a family without a documented field.
+- **Intel clock modulation and the uncore ring have their own switches**, each gated by firmware state and each with its own revert.
+- **The Realtek 2.5G step now also covers PCIe power saving in the adapter**, migrated into existing profiles.
+- **A profile can be built for hardware that is not in this machine**, marked "profile only" instead of locked.
+- **RX High Priority uses the real ports of the running game** instead of filling the table with a guessed range.
 
-## 8.6.5 — 2026-09
+## 8.6.28 - 2026-10-04
 
-### Added
-- RTL8125 Deep-Latency-Tuner as a selectable premium profile (deep apply, revert, NIC restart) for the Realtek RTL8125/8126 family
-- 5-day full-feature auto trial on first launch
+### The effect card measures watts
 
-### Changed
-- Credits and documentation updated; NIC profile scope documented in-app
+- Every A/B run reports the CPU's own energy counter per phase, and each row names which counter produced the figure or says that none is available.
+- The read-only hardware catalogue grew, with every field checked against the vendor documentation for the exact CPU family.
 
-## 8.6.x and earlier — 2026
+## 8.6.27 - 2026-09-30
 
-- Game Mode with foreground detection, name-based process matching, suspendable background processes, journal and crash guard
-- S.U.C.K. network protocol engine with apply → verify → diff, portable profiles and snapshot-before-write
-- Win Tweak Verifier, Registry Shield, device cleaner and driver repair utilities
-- Latency measurement with jitter analysis, DPC/ISR reporting, TSC verification
-- PCIe/CPU/USB hardware layer with read-back verification, boot task persistence and GPU clock pinning
-- Premium licensing with lifetime keys and auto trial
+### The License button works again
+
+- The lower sidebar button opened nothing after a navigation entry was removed. It opens the licence page directly now.
+
+## 8.6.26 - 2026-09-30
+
+### Sidebar cleanup and release announcements
+
+- The sidebar no longer shows "License" twice; the lower button is the only door to the licence page.
+- The lower sidebar reads as one colour gradient.
+- Discord messages are always English, and the release channel announcement carries `@everyone`.
+
+## 8.6.25 - 2026-09-30
+
+### Release channel and a consistent name
+
+- **A second Discord channel** can be configured for releases; both channels receive the same text.
+- **The in-app update returns to the app** after the installer finishes.
+- **"Beyond" is renamed to "Jackpot"** everywhere - power plans, action names, help texts and translations. Imported plans are renamed to the file stem.
+- **The engine-failure dialog is styled like the suite** and offers an elevated restart and details.
+
+## 8.6.24 - 2026-09-30
+
+### Honest verdicts
+
+- **The GPU clock lock is proven by measurement** on drivers that no longer expose the applied value: the pin counts when the clock holds its value, and a floating clock stays "unverified".
+- **Clearing the frame limiter no longer reports a failed delete** when the driver only leaves a zero entry behind.
+- Two hard-coded German evidence lines now translate with the rest of the interface.
+
+## 8.6.10 - 2026-09-23
+
+### Game launch, frame limiter and benchmarks
+
+- **Game Launch card:** one click applies the whole session - network profile, thread tuning, power plan, GPU lock, game mode - with a live readiness checklist and a smart launch continuation.
+- **Driver-level frame limiter per game:** no injection, read back from the driver, re-verified on every launch and cleaned up when the game ends.
+- **Benchmarks card:** CapFrameX capture import, honest statistics and a classified frame-limit advisor.
+
+## Earlier releases
+
+The 8.6.5 to 8.6.9 builds introduced the in-app update system with checksum-verified installers, per-core write acceptance reporting, the extended driver diagnostics, the automatic antivirus exclusion and the prerequisites chapter in the help manual. Their full notes remain on the [Releases](https://github.com/JACKPOT71/Hypertune/releases) page.

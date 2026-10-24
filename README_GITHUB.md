@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.27` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.39` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -59,7 +59,7 @@ CapFrameX captures are imported automatically and reported honestly: average, 1 
 The toggle on the dashboard: all optimizations for a game on or off, nothing else to click. The selection is remembered across reboots, every change is journaled and rolls back cleanly.
 
 ### Live State Probe — trust through reading
-A read-only view shows what is actually active after every reboot: USB state, U0 locks, data-fabric C-states, power plan, boot task health, GPU watchdog. No claims — register values.
+A read-only view shows what is actually active after every reboot: USB state, U0 locks, data-fabric C-states, power plan, boot task health, GPU watchdog. No claims — measured values.
 
 ### Network layer (S.U.C.K. Protocol)
 - Hardened network stack engine with **Apply → Verify → Diff** cycle: every value is compared live after application, deviations are reported per key
@@ -91,92 +91,25 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 
 ---
 
-## Release Notes v8.6.27
+## Release Notes v8.6.39
 
-**The License button opens its door again**
-- The License button in the lower sidebar opens the license page again. The click had stopped working in v8.6.26; this release restores it. No other changes.
+**The profile folder carries profiles, not the workshop**
+- **Four profiles instead of eighteen.** The shipped folder had collected every working copy of the master profile. What ships now is `Windows-Default` (the unload target), `14.10.2026` (master with a launch link), `Fortnite_Competitive_22.10.2026` (the active one) and `Auto Fortnite 360` (the Smart Auto-Pilot profile).
+- **Only the profiles travel.** Backups, the machine fingerprint and the author's active-profile marker stay on the build machine; the game sessions were cleaned the same way.
 
-<details>
-<summary><strong>Release Notes v8.6.26</strong></summary>
+## What changed since 8.6.31
 
-**One License door**
-- The sidebar no longer shows "License" twice — the stray icon-less navigation entry is gone, the License button in the lower sidebar is the only door to the license page.
+**Eight versions in one upgrade**
+- **Profiles are one file now.** "Share profile" writes the whole profile - tuning and game session - into a single `.hypertune` file. It is encoded, and import asks before replacing an existing name.
+- **Closing the suite gives the machine back.** Game Mode suspension and Thread Tuner priority, affinity and efficiency mode are restored on exit; nothing stays frozen or boosted.
+- **A saved profile keeps what you changed**, and Auto-Tune no longer resets a recorded choice.
+- **IPv6 is measured instead of rewritten**, the MTU probe can climb again, and German Windows no longer blinds the network check.
+- **The start board stops promising twice**; the banner and mascot ship with the setup again.
+- **Older Intel CPUs start again:** the build no longer requires AVX-512, and a failed driver check shows a dialog instead of a silent exit.
 
-**A blue gradient, not an ampel**
-- The four lower sidebar buttons rise from dark to light in one hue: License `#0090B8` → BSoD Guard & Reset `#00B8E8` → Repair Driver Service `#00D5FF` → Reboot System `#33EFFF`, each hover one step brighter. The version line closes the gradient in the brightest blue (`#4DF5FF`).
+**One thing to do:** a serial issued before 19.10.2026 needs one fresh activation after this update.
 
-**Discord: always English, release channel pings**
-- Discord messages no longer follow the suite's UI language — the channel is public, the text is English. The automatic release announcement carries **@everyone** on the release channel while the main channel stays quiet.
-
-</details>
-
-<details>
-<summary><strong>Release Notes v8.6.25</strong></summary>
-
-**Jackpot identity**
-- "Beyond" is renamed to "Jackpot" everywhere: the shipped power plans (`Jackpot_Maximum.pow`, `Jackpot-PERFORMANCE-AMD+INTEL.pow`), the S.U.C.K. action ids and cmdlets (`jackpot-ndis-global`, `Jackpot-GlobalOffloads`), vendor profiles, help texts and translations. Imported plans are renamed to the file stem, so `powercfg` shows what you picked. Your existing snapshots and journals on disk are untouched.
-
-**Honest engine errors**
-- The "hardware engine could not start" dialog is now suite-styled instead of a grey Windows MessageBox — with **"Run as administrator"** built in (one click, elevated restart) and **"Show details"** (opens the crash/startup log directly). Duplicate failures within two minutes show exactly one dialog instead of a stack of three.
-
-**Real language switch**
-- Switching languages no longer leaves half the interface in the old language: after the switch you get a straight question — restart now (app only, same elevation) or defer by choice.
-
-**The update that brings you back**
-- The in-app update runs the installer with /PASSIVE, closes the suite cleanly (workers collected) and the installer's post-install launch brings the new version back automatically — visible checkbox, no hidden autostart.
-
-**Discord release channel**
-- Optional second webhook: releases are announced to both channels with the same formatting and the same signed release text. The once-per-version marker stays shared, so a dead second webhook can never silence the main one.
-
-</details>
-
-<details>
-<summary><strong>Release Notes v8.6.24</strong></summary>
-
-**GPU lock — proven again, honestly**
-- "Lock Clocks" fell back to behavioral proof: driver 610.88 deprecated the value read-back channel, so the button reported an honest but useless "UNVERIFIED" while the pin itself held (measured on an RTX 2070: clock pinned at 1920 MHz, spread 0 MHz, for weeks). The verdict now proves the pin by measurement — clock pinned at the requested value (spread ≤ 2 MHz) plus the driver's "Applications Clocks Setting" throttle reason. A pin at a *different* value is named with that value; a floating clock stays "unverified". The lock mechanism itself was not touched.
-- Frame limiter: a working delete no longer reports "delete did not stick" — the driver leaves an entry with value 0 behind, which now reads as "no limit set" on both the clear and the read path (23-check smoke with counter-probes).
-
-**Transparency**
-- Discord update messages now embed the full release text — the same notes the GitHub release shows, sourced from one file in the repository (`_release_notes.md`): one edit, both channels.
-- Two hard-coded German evidence lines on the Quality Self-Check page now resolve through the language module (all seven languages).
-
-**Interface**
-- Discord webhook dialog buttons use the suite's own button style (primary/default/danger) instead of raw system buttons.
-- Sidebar version label lightened for readability.
-
-**Verification & Release**
-- 554 unit tests, 30 P0 checks, full release battery green (behavioral-lock smoke with counter-probes, frame limiter, update-notify, i18n parity in 7 languages).
-- Installer SHA-256 recomputed independently; Ed25519 manifest signature verified against the pinned key; tampered manifests rejected.
-
-</details>
-
-<details>
-<summary><strong>Release Notes v8.6.10</strong></summary>
-
-**Game Launch & frame limiter**
-- New Game Launch card: one-click full-session apply with readiness checklist and smart launch continuation
-- Driver-level per-game frame limiter (no injection, live read-back, re-verified every launch)
-- Game artwork now ships with the installer
-
-**Benchmarks**
-- New Benchmarks card with CapFrameX capture import, honest statistics (average, 1 % low, latency) and the classified frame limit advisor
-- Configurable capture folder with auto-detection
-
-**Process layer**
-- Mission Control: Game Mode and Thread Tuner united in one process list with park / throttle / boost actions
-- Game Catcher: live process list with one-click name capture
-- Thread Tuner profile sharing via validated JSON export/import
-
-**Transparency**
-- New Live State Probe card: read-only register-level verification of what survived the reboot
-- Game Session toggle now remembers its selection across reboots
-
-**Interface**
-- Full six-language sweep: every dashboard card follows the language switch, protected by an automated pairing test
-- Unified dashboard color language; red reserved for errors
-
-</details>
+See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
 <details>
 <summary><strong>Full prerequisite list (target machine)</strong></summary>
@@ -185,7 +118,7 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 |---|---|---|
 | Administrator start | Mandatory | Kernel driver, bus configuration, boot settings |
 | Antivirus exclusion for install folder | Strongly recommended | Kernel driver is classified as a generic "Hacktool" by pattern-based AV engines |
-| BIOS: CFG Lock disabled | Intel platforms only | BIOS-locked registers reject low-power-state writes; the engine detects and reports this |
+| BIOS: CFG Lock disabled | Intel platforms only | Firmware-locked power settings reject low-power-state writes; the engine detects and reports this |
 | Memory Integrity (HVCI) disabled | Windows 11 only | HVCI enforces the Microsoft vulnerable-driver blocklist; irrelevant on Windows 10 |
 | Realtek RTL8125/8126 NIC | Deep latency profile only | All other features are vendor-independent |
 

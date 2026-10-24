@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.31` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.39` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -67,60 +67,25 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 
 ---
 
-## Release Notes v8.6.31
+## Release Notes v8.6.39
 
-**A diagnosis that no longer kills the app - and a stale engine that no longer wins**
-- The "Export diagnostics" button ended the app on a customer machine: window gone, no traceback, not one line in `crash_log.txt`. That is the signature of `QThread: Destroyed while thread is still running` — Qt aborts the process with `qFatal`, without a Python exception, so nothing can log it. The worker reference now falls on `finished`, for the export and the upload, and the busy guard asks `isRunning()`.
-- The two probes that reach into foreign code (NVAPI/DRS in the graphics driver, Win32 window and process queries) run in a child process. A crash or a timeout is now a finding inside the zip instead of a vanished window.
-- The isolated probe writes UTF-8 itself. In this release's own suite run the child printed with the console's code page (cp1252 on German Windows) while the parent read UTF-8, so the zip carried `UnicodeEncodeError` instead of the game-mode probe. The child now sets UTF-8 (`errors="replace"`) before the first character, and the zip names the command that produced each probe.
-- The engine contract checks the signature, not three names. Fifteen steps reported `read_only` as an unexpected keyword and one a missing `apply_realtek_ndis_registry_guard` — that was an old `IMOD-Test.py` answering as the engine. In the built EXE the compiled engine wins; a leftover source file can no longer replace it.
-- 26 subprocess calls in eight modules read their output with `encoding="utf-8", errors="replace"`. A single `0x81` byte killed the reader thread nine times in the customer log, and the caller was left with neither text nor an error.
-- A failed driver check at import is now shown instead of ending the process windowless: a message box naming the file plus `crash_entry.txt`.
+**The profile folder carries profiles, not the workshop**
+- **Four profiles instead of eighteen.** The shipped folder had collected every working copy of the master profile. What ships now is `Windows-Default` (the unload target), `14.10.2026` (master with a launch link), `Fortnite_Competitive_22.10.2026` (the active one) and `Auto Fortnite 360` (the Smart Auto-Pilot profile).
+- **Only the profiles travel.** Backups, the machine fingerprint and the author's active-profile marker stay on the build machine; the game sessions were cleaned the same way.
 
-**Not verified: the customer's Intel machine itself**
-- The isolation and the worker lifetime are measured in tests and in the build. Whether the button now produces a complete zip *on that machine* can only be confirmed by the zip it sends back.
+## What changed since 8.6.31
 
-**This build is unsigned**
-- The setup is unsigned (the build's own artifact carries the suffix `-unsigned`); Windows SmartScreen will warn on first run. Please verify the SHA-256 of the installer and the signature of the manifest against the release page before installing.
+**Eight versions in one upgrade**
+- **Profiles are one file now.** "Share profile" writes the whole profile - tuning and game session - into a single `.hypertune` file. It is encoded, and import asks before replacing an existing name.
+- **Closing the suite gives the machine back.** Game Mode suspension and Thread Tuner priority, affinity and efficiency mode are restored on exit; nothing stays frozen or boosted.
+- **A saved profile keeps what you changed**, and Auto-Tune no longer resets a recorded choice.
+- **IPv6 is measured instead of rewritten**, the MTU probe can climb again, and German Windows no longer blinds the network check.
+- **The start board stops promising twice**; the banner and mascot ship with the setup again.
+- **Older Intel CPUs start again:** the build no longer requires AVX-512, and a failed driver check shows a dialog instead of a silent exit.
 
-## Release Notes v8.6.30
+**One thing to do:** a serial issued before 19.10.2026 needs one fresh activation after this update.
 
-- The binary no longer requires AVX-512. The 8.6.29 artifact carried 102 AVX-512 instructions, one of them in its startup function; this build carries **0** across 15,578 functions and 7.57 M instructions.
-- Compiling and linking now use the same fixed CPU baseline, so link-time optimisation stays on without bringing the problem back.
-- A failed driver check is reported instead of ending the app silently: a message naming the missing file plus `crash_entry.txt`, instead of a windowless exit code 1. The check itself is unchanged.
-- The installer is unsigned, as 8.6.29 was. Windows SmartScreen will ask for confirmation; the SHA-256 on the release page is the reference.
-
-## Release Notes v8.6.29
-
-- Applying a profile no longer rewrites the saved start chain with a shorter port list. The chain is treated as the profile's own: the nine RX High Priority ports and the fourteen device addresses survive a reboot even when the chain was written before the apply.
-- An explicit **Apply Everything** always runs. A rocker that already shows ON is a state, not a reason to swallow the click — the session starts exactly once.
-- RX High Priority writes the ports the profile names instead of filling all 128 slots with guessed values. A range is only written when it fits completely; live ports from a running game are used for that session and never saved.
-- A/B effect checks now report measured CPU energy and average power when a trustworthy hardware energy counter is available; the source is named and unsupported counters remain explicitly unavailable.
-- The read-only hardware-register catalogue now contains 56 entries, checked against the relevant processor documentation.
-- Network-setting removals now require a successful read-back before they are reported as complete.
-
-See [CHANGELOG.md](CHANGELOG.md) for the full release history.
-
-<details>
-<summary><strong>v8.6.8 release notes</strong></summary>
-
-**Software update system**
-- Smart Update: the app downloads the official installer, verifies its SHA-256 checksum and launches it. No browser roundtrip, no manual hash comparison. The application closes itself; all settings survive the update.
-- The update manifest is now checksum-signed per release. Checksum mismatch = hard fail with a clear message, never a silent install.
-
-**Verification & transparency**
-- Boot engine now reports per-core write acceptance counts. If a platform refuses a low-power-state write on every core, the log states "NOT applied" instead of a success line. Trust the log, not the hope.
-- Driver diagnostics extended: detects the missing-driver-next-to-executable condition and the USB helper-driver condition, both with plain-language fixes.
-
-**Deployment**
-- The installer now registers an antivirus exclusion for the installation folder automatically (optional, one-click manual fallback inside the app under *Maintenance*).
-- New built-in documentation chapter: *Prerequisites* — the exact set of platform requirements per feature, per vendor.
-
-**UI**
-- Live version display in the sidebar (red, always visible) and in the window title.
-- Additional maintenance shortcut for Defender exclusion handling.
-
-</details>
+See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
 <details>
 <summary><strong>Full prerequisite list (target machine)</strong></summary>
@@ -129,7 +94,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 |---|---|---|
 | Administrator start | Mandatory | Kernel driver, bus configuration, boot settings |
 | Antivirus exclusion for install folder | Strongly recommended | Kernel driver is classified as a generic "Hacktool" by pattern-based AV engines |
-| BIOS: CFG Lock disabled | Intel platforms only | BIOS-locked registers reject low-power-state writes; the engine detects and reports this |
+| BIOS: CFG Lock disabled | Intel platforms only | Firmware-locked power settings reject low-power-state writes; the engine detects and reports this |
 | Memory Integrity (HVCI) disabled | Windows 11 only | HVCI enforces the Microsoft vulnerable-driver blocklist; irrelevant on Windows 10 |
 | Realtek RTL8125/8126 NIC | Deep latency profile only | All other features are vendor-independent |
 

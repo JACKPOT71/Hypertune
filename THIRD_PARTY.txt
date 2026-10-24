@@ -69,3 +69,21 @@ THE SOFTWARE.
 Betroffene Icons (18):
   check circle clock crosshair database download download info loader lock 
   minus monitor plus power search target trash-2 upload 
+
+--------------------------------------------------------------------
+3) Montserrat - SIL Open Font License 1.1
+--------------------------------------------------------------------
+
+Mitgeliefert in assets/fonts/ (Regular, SemiBold, Bold, ExtraBold,
+Black) als Ueberschriftenschrift. Der vollstaendige Lizenztext liegt in
+assets/fonts/OFL.txt und wird mit der App ausgeliefert.
+
+Copyright 2024 The Montserrat.Git Project Authors
+(https://github.com/JulietaUla/Montserrat.git)
+
+This Font Software is licensed under the SIL Open Font License,
+Version 1.1. The Font Software may be used, studied, modified and
+redistributed freely as long as it is not sold by itself. The fonts,
+including any derivative works, may be bundled, embedded, redistributed
+and/or sold with any software provided that the reserved name
+"Montserrat" is not used for modified versions.

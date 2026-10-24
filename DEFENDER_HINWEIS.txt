@@ -2,7 +2,7 @@ WHY WINDOWS DEFENDER COMPLAINS - AND WHY THAT IS OKAY
 ======================================================
 
 In short: Hypertune uses the kernel driver "WinRing0" to read and write
-MSR and PCI registers of your hardware directly. Ring-0 access is exactly
+low-level hardware registers of your machine directly. Ring-0 access is exactly
 the capability malware abuses too, so Defender classifies drivers like
 WinRing0 generically as a "Hacktool" - not because something happened,
 but because it COULD.
@@ -10,8 +10,7 @@ but because it COULD.
 Facts:
 * WinRing0 is a long-published open-source driver (OpenLibSys) that has
   been shipping in well-known hardware monitoring tools for years.
-* Hypertune uses it solely to read and write hardware registers (MSR,
-  PCI configuration space). It installs no services that send data, no
+* Hypertune uses it solely to read and write hardware registers. It installs no services that send data, no
   autostart entries beyond the documented boot task, and downloads
   nothing from the internet.
 * Every write is read back and verified afterwards (visible in the

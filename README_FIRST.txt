@@ -48,8 +48,7 @@ B) NEUINSTALLATION:
           automatisch ausgefuehrt (Task: IMOD_Startup_Task).
 
 HINWEISE:
-- Administrator-Rechte sind fuer alle Hardware-Tweaks erforderlich (MSR,
-  PCIe-Konfigurationsraum, MMIO). Ohne Admin laufen nur die Registry-Teile.
+- Administrator-Rechte sind fuer alle Hardware-Tweaks erforderlich (Prozessor-, PCIe- und Geraeteregister). Ohne Admin laufen nur die Registry-Teile.
 - Der "BSoD Guard" schuetzt kritische Root-Ports (MPS Re-Framing wird
   bewusst uebersprungen) - das ist Sicherheits-Feature, kein Fehler.
 - Die Sprache laesst sich oben rechts live umschalten (6 Sprachen).
@@ -66,7 +65,7 @@ TROUBLESHOOTING:
 ANTI-CHEAT-KONFLIKT (WICHTIG FUER GAMER):
   Anti-Cheat-Systeme wie FACEIT AC oder Vanguard blockieren die Kernel-
   treiber WinRing0.sys und RwDrv.sys BEWUSST. In diesem Fall koennen die
-  Hardware-Tweaks (PCIe, MSR, USB) nicht angewendet werden - sie bleiben
+  Hardware-Tweaks (PCIe, Prozessor, USB) nicht angewendet werden - sie bleiben
   auf Stock. Registry- und Netzwerk-Tweaks funktionieren weiterhin.
   Erkennen:
     - Beim Start erscheint ein ROTER HINWEISBANNER im Programm (wenn im
@@ -169,8 +168,7 @@ B) FRESH INSTALLATION:
           login (task: IMOD_Startup_Task).
 
 NOTES:
-- Administrator rights are required for all hardware tweaks (MSR, PCIe
-  config space, MMIO). Without admin, only the registry parts run.
+- Administrator rights are required for all hardware tweaks (processor, PCIe and device registers). Without admin, only the registry parts run.
 - The "BSoD Guard" protects critical root ports (MPS re-framing is
   intentionally skipped) - this is a safety feature, not a bug.
 - The language can be switched live at the top right (6 languages).
@@ -188,7 +186,7 @@ TROUBLESHOOTING:
 ANTI-CHEAT CONFLICT (IMPORTANT FOR GAMERS):
   Anti-cheat systems such as FACEIT AC or Vanguard deliberately block
   the kernel drivers WinRing0.sys and RwDrv.sys. When that happens the
-  hardware tweaks (PCIe, MSR, USB) cannot be applied - they stay on
+  hardware tweaks (PCIe, Prozessor, USB) cannot be applied - they stay on
   stock. Registry and network tweaks keep working.
   How to detect it:
     - A RED warning banner appears in the program at start (shown when
@@ -250,10 +248,10 @@ Tier 2 (Ghidra, the deep analysis - optional):
 
 --- DISCLAIMER / HAFTUNGSAUSSCHLUSS -----------------------------------------
 
-Dieses Tool veraendert Systemeinstellungen (Registry, MSR, PCIe). Nutzung
+Dieses Tool veraendert Systemeinstellungen (Registry, PCIe, processor registers). Nutzung
 auf eigene Verantwortung. Erstelle vor der ersten Verwendung einen
-Wiederherstellungspunkt. / This tool modifies system settings (registry,
-MSR, PCIe). Use at your own risk. Create a restore point before first use.
+Wiederherstellungspunkt. / This tool modifies system settings (registry, PCIe,
+processor registers). Use at your own risk. Create a restore point before first use.
 
 ============================================================================
  (C) 2026 Jackpot's Hardware Register Engine
