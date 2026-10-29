@@ -18,8 +18,6 @@ All notable changes to Hypertune are documented here, newest first. This is the 
 
 #### Fixed
 - **The licence window says five days in every language.** The code already granted five days, but the interface said three - in all seven languages.
-- **A developer-only path is no longer part of the build.** The benchmark capture fallback pointed at one machine's desktop and was a dead path everywhere else.
-
 #### Changed
 - **An activated licence stays activated.** The update keeps the existing state; no re-activation is needed.
 - **Profiles stay shareable.** The profile format is unchanged, and a profile from another machine still imports.
