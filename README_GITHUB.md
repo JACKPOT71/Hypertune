@@ -96,8 +96,17 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 **A labelled installer, and the tuning this machine runs**
 - **This build is unsigned, and it says so.** Windows will show "Unknown publisher" on first run; that is expected for this release. The release page names the SHA-256 and ships `SMARTSCREEN.md` with the two clicks it takes. Nothing here is called signed, verified or safe.
 - **The checksum travels with the download.** Every setup now gets a `<name>.sha256` file next to it, so the file can be checked before it runs. The release text names the same value.
+- **The trial period says five days in every language.** The app and the licence page now agree; an existing trial keeps its start date.
 - **The tuning is unchanged.** `Jackpot_7800X3D_Fortnite`, `Jackpot_Hypertune.nip` and `Jackpot_Hypertune.pow` are the same files from 8.6.54: the 150-setting NVIDIA base profile, the 40-value power plan, the 1920 MHz GPU lock and the unlimited frame limiter. No profile was rebuilt for this release.
-- **Your install stays yours.** The setup replaces the program files; profiles, the active power plan and the licence stay in place.
+- **Your install stays yours.** The setup replaces the program files; profiles, the active power plan and an activated licence stay in place. Nothing needs to be re-entered.
+
+## Release Notes v8.6.55
+
+**Five days, a cleaner build, and profiles you can still share**
+- **The licence window says five days in every language.** The code already granted five days, but the interface said three - in all seven languages.
+- **An activated licence stays activated.** The update keeps the existing state; no re-activation is needed.
+- **Profiles stay shareable.** The profile format is unchanged, and a profile from another machine still imports.
+- **A developer path is no longer part of the build.** The benchmark capture fallback pointed at one machine's desktop and was a dead path everywhere else.
 
 ## Release Notes v8.6.54
 
@@ -257,7 +266,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
 ## Installation
 
-1. Download `Hypertune_Setup_<version>.exe` from [Releases](https://github.com/JACKPOT71/Hypertune/releases).
+1. Download `Hypertune_Setup_<version>-unsigned.exe` from [Releases](https://github.com/JACKPOT71/Hypertune/releases).
 2. Run it. The installer handles running instances, service state and the antivirus exclusion.
 3. Start Hypertune. The daily update check keeps you current automatically; updates install with one click from inside the app — downloaded, checksum-verified, then installed.
 
