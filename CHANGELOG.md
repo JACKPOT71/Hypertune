@@ -2,6 +2,228 @@
 
 All notable changes to Hypertune are documented here, newest first. This is the public history: it describes what changed for the user, not how it is implemented. Detailed engineering notes stay with the source.
 
+## 8.6.56 - 2026-10-29
+
+### A labelled installer, and a checksum you can check
+
+- **Unsigned builds are labelled, not hidden.** The setup ends in `-unsigned`; Windows will show "Unknown publisher" on first run. `SMARTSCREEN.md` explains the two clicks, and a `<name>.sha256` file sits next to the download.
+- **The checksum is the same in the release text and the file.** Compare it before running the setup.
+- **The trial period says five days in every language.** The app and the licence page now agree; an existing trial keeps its start date.
+- **Nothing needs to be re-entered.** An activated licence stays activated; profiles, the active power plan and settings stay in place.
+- **No tuning changes.** Profiles, power plan and measurement paths are unchanged.
+
+## 8.6.55 - 2026-10-29
+
+### Five days, a cleaner build, and profiles you can still share
+
+#### Fixed
+- **The licence window says five days in every language.** The code already granted five days, but the interface said three - in all seven languages.
+- **A developer-only path is no longer part of the build.** The benchmark capture fallback pointed at one machine's desktop and was a dead path everywhere else.
+
+#### Changed
+- **An activated licence stays activated.** The update keeps the existing state; no re-activation is needed.
+- **Profiles stay shareable.** The profile format is unchanged, and a profile from another machine still imports.
+
+## 8.6.54 - 2026-10-29
+
+### The plan, the preset and the profile this machine runs
+
+#### Added
+- **`Jackpot_7800X3D_Fortnite` ships as a profile.** It carries the state of the tuning machine in one file: power plan, GPU clock lock at 1920 MHz, Game Mode, the Competitive Gaming thread profile, the network profile, the Realtek/NIC/PCIe/MSR/USB chain and an unlimited frame limiter.
+
+#### Changed
+- **`Jackpot_Hypertune.pow` is checked against the running scheme.** All 40 values of the active plan were read back and compared with the shipped file - no difference. What the setup installs is the plan the measurements ran on.
+- **`Jackpot_Hypertune.nip` is the single Jackpot preset in `nip/`.** One base profile with 150 settings, applied machine-wide; the older Jackpot presets are gone from the folder and are removed from an existing install on update.
+
+## 8.6.53 - 2026-10-28
+
+### Frame limiter: the executable that actually runs
+
+#### Fixed
+- **The limit landed in a profile the game never loads.** Fortnite starts as `FortniteClient-Win64-Shipping_EAC_EOS.exe`, while the tool wrote `FortniteClient-Win64-Shipping.exe`. RTSS picks its profile by file name, so the value was never applied: the status line said "saved", the game stayed uncapped.
+- **Every executable of a game is written now.** The resolved name, its siblings in the game folder, the running process and every existing profile of the family all receive the same value.
+- **Unlimited clears the whole family.** A leftover cap in a second executable can no longer survive the reset and keep limiting.
+- **The read-back is per profile.** If one of them refuses the value, the message names it instead of claiming success.
+
+## 8.6.52 - 2026-10-28
+
+### Jackpot's NVIDIA presets on board - and a profile list that only shows current stands
+
+#### Added
+- **Three NVIDIA presets from Jackpot.** `Jackpot_SmoothDX12.nip` (DWM low latency, three pre-rendered frames, 10 GB shader cache, highest refresh), `Jackpot_MaxFPS.nip` (V-Sync and G-Sync off, texture filtering on High performance) and `Jackpot_LowLatency.nip` (ultra low latency). Each one carries a base profile plus the Fortnite executables, so it applies to the game and not to the whole machine.
+- **The power plan was already on board.** `Jackpot_Hypertune.pow` has been in `pow/` since 8.6.51 - the same file, byte for byte.
+
+#### Changed
+- **The setup ships only current profiles.** The old master stand `14.10.2026` still travelled along and sat in the profile list next to the current saves. It stays in the working tree as a test fixture only.
+
+#### Fixed
+- **A retired profile would have stayed forever.** Inno deletes only what it installed itself, so a dropped template survived every update in the program folder - and kept showing up in the list. The installer removes it by name now.
+
+## 8.6.51 - 2026-10-27
+
+### BIOS Tuner: six more switches, three corrected names
+
+#### Added
+- **PCIe payload and read request at the maximum.** `Maximum Payload` and `Maximum Read Request` sat on `Auto`; the Optimized profile now asks for 4096 bytes per transaction - fewer headers for the same amount of data.
+- **Network boot off.** `LAN Boot`, `Onboard PCIE LAN PXE ROM`, `IPv4 PXE Support` and `IPv6 PXE Support` are switched off, so the BIOS no longer looks for a boot server during POST.
+- **USB mass storage driver off.** `USB Mass Storage Driver Support` is disabled; a Windows installer or rescue stick from USB needs that switch back on in the BIOS first.
+- **One sentence of warning comes with it.** The Optimized tier now says out loud that network boot and the USB mass storage driver get switched off, before anything is written.
+
+#### Fixed
+- **The LAN controller of an AM5 board was never found.** "Intel LAN Controller" looks for a name the board does not know; it calls its chip "Realtek LAN Controller". The name is an alias now.
+- **AER was invisible, and Thunderbolt was matched by similarity.** The board calls "Enable AER Cap" -> "Advanced Error Reporting (AER)" with the values Not Supported/Supported/Auto; the rule names that block and its value. "Thunderbolt Support" was matched to "Thunderbolt L1SS Support" only because the names look alike - a different switch on a different section. The real block, "Thunderbolt/USB4 (Intel JHL8540 controller) Support", is named explicitly.
+- **Every switch was checked against a real board before shipping.** On the reference export, 67 of the 103 Optimized switches find their block; the rest are names other boards use.
+
+## 8.6.50 - 2026-10-27
+
+### Measurement run: the governor decides whether the numbers count
+
+#### Added
+- **"Measurement run" card.** Record A, change one lever, record B, compare - one block per press, with a plain-words line saying what comes next. PresentMon reads along (ETW), the game stays in front.
+- **Spread as its own row.** Spread in percent, 99.9th percentile frame time and stutters per ten minutes. A tweak that lifts the average and the spread with it now shows up instead of hiding behind a nicer mean.
+- **The clock floor of every run.** The card records what the platform allowed while it captured, and whether the processor ever reported that it could not deliver the minimum.
+- **Optional measurement mode "clock pinned".** Holds the clock for A and B so a jumping clock cannot be mistaken for an effect. It is a measurement, not tuning: one button restores the exact value that was there, and the next restart removes it anyway.
+
+#### Changed
+- **Blocks instead of two record buttons.** Which side a block belongs to is decided by the tick "lever is applied", not by the order of presses - a forgotten switch can no longer turn the reference into the new side.
+- **Warm-up and pauses belong to the run.** The first capture after a change is discarded, and there is a pause between captures so one capture does not measure the heat of the previous one.
+- **The A/B chain uses the same gate.** The chain report now says "no verdict" when its two sides stood on a different clock floor, and keeps the statistics beside it.
+
+#### Fixed
+- **A measured zero was read as missing data.** "No stutters in ten minutes" is a valid, common value; it was treated as "no data" and could block a verdict. Zero now counts as zero, and a ratio against zero is refused instead of invented.
+- **The clock trace could not be read at all.** The offered performance ladder was never part of the recorded series, and two values stood as plain numbers where the evaluation expected fields - so the trace reported "not readable" on every machine, and the protection against a changed clock floor would never have triggered. Both are fixed, and a test now proves the trace reads what it announces.
+- **An empty register is reported as empty.** When the platform does not publish an allowed ceiling, the window says so and shows a dash - instead of "0 of 255", which would be a statement nobody made.
+
+## 8.6.49 - 2026-10-27
+
+### BIOS Tuner: a way back you can read
+
+#### Added
+- **"Back to stock" in the footer.** One button, one question, restart - the board is back to the state from before the first change.
+- **The stock state is captured automatically.** Before the first write the tool saves the untouched BIOS under a readable name; the button is live from that moment on.
+- **"Other state ..." lists every saved state.** Stock, Basics, Optimized, Expert - with date and file name, newest first, stock always on top.
+
+#### Changed
+- **Saved states have readable names.** `Stock_BIOS_before_everything_YYYY-MM-DD_HHMM.txt`, `BIOS_Optimized_...`, `BIOS_Expert_...` instead of `BIOSSettings_backup_<stamp>_basics`.
+- **A register (`snapshots.json`) names the kind of every state.** Names are re-read from the folder, so a lost register costs nothing.
+- **Applying re-reads the BIOS when the basis is stale.** An older loaded file no longer gets written over everything; the window refreshes first and asks for one more click.
+
+#### Fixed
+- **Restore no longer guesses.** The old code took the newest file with `_backup_` in the name and, on 27.10, restored the wrong state - the result looked like "nothing changed". The stock entry is now explicit.
+- **Silent undo is gone.** Reverting while an old stock file was loaded rewrote all 2268 rows and cleared the Optimized values along the way.
+
+## 8.6.48 - 2026-10-27
+
+### Revert Center: pick the step you want to go back
+
+#### Added
+- **The sidebar button opens a chronicle.** Every apply run is listed with its steps and the state before it, next to the registry snapshots - newest first.
+- **Single steps can be undone.** Tick exactly the switches you want back; the rest of the profile stays applied.
+- **"Back to this point" rolls back run by run.** The newest run is always taken back first; the rollback stops and says so if a step is not confirmed.
+- **Every row names its way back.** Classic steps return to the value recorded before that run, hardware steps to Windows default.
+
+#### Changed
+- **The emergency .reg folder moved inside.** The offline files are still one button away, but they are no longer the only thing the button does.
+- **A step with no way back is reported.** If the recorded pre-state is missing, the window says "no way back" instead of claiming the switch was restored.
+
+## 8.6.47 - 2026-10-27
+
+### BIOS Tuner: the crest, and every switch in your hand
+
+#### Added
+- **Your crest sits in the corner.** The round badge at the top left of the BIOS Tuner shows the suite's crest instead of the two letters. A stand-alone copy without the crest falls back to the letters, so nothing breaks.
+- **Every row has a tick.** Basics, Optimized and Expert now put a check box in front of every setting. Only ticked rows are written; everything unticked stays exactly as it is on the board.
+- **Every target value can be changed.** Double-click a target value to choose from the values the board actually offers, or type a number. Changed rows are marked in the table and tick themselves.
+
+#### Changed
+- **One setting, one row in Expert.** When both the profile and the engine proposed a setting, Expert listed it twice - two rows with two values. Each setting now appears once.
+- **A contradiction is reported, not guessed.** If two ticked rows point at the same BIOS setting with different values, neither is written and the confirmation names it. Untick one of them and the other applies.
+- **The way back stays one click.** Every apply still writes its own backup first; "Restore backup" in the footer puts the previous state back into the BIOS.
+
+## 8.6.46 - 2026-10-26
+
+### Game Mode always releases what it paused
+
+#### Fixed
+- **Turning Game Mode off during a game frees every paused program.** Programs could stay paused when a game kept running and the mode was switched off in between - they then had to be ended by hand. Everything the switch pauses is now released again.
+- **Pausing the same program twice no longer stacks.** A program that had been paused in more than one pass survived a single release and stayed frozen. The switch now checks what is already paused before it pauses anything, and it releases a program until it is verifiably running again.
+- **The automatic watcher acts on a change, not on a state.** It pauses when a game appears and releases when the game ends - switching Game Mode off during a game now stays off.
+
+## 8.6.45 - 2026-10-26
+
+### The frame limiter takes effect at once
+
+#### Fixed
+- **"Set" changes the frame rate while the game is running.** Until now the value was only stored and took effect from the next launch - a limit set during a session never reached the running game. It does now, without restarting anything.
+- **"Unlimited" really removes every limit.** A limit left behind in the base profile could keep capping the game even after "Unlimited" was pressed. Every place the suite can write is cleared now.
+- **The status line says what is happening.** It shows the frame rate measured inside the running game and, when the running game is not ready for a change yet, tells you to restart it once instead of claiming success.
+- **The install-time self-check leaves an existing driver service alone.** It reports a driver that still points at an older installation instead of reconfiguring it mid-check. A missing service is still created, otherwise the check would have nothing to verify.
+
+### BIOS Tuner: one profile for the 7800X3D, less risk
+
+#### Changed
+- **PBO keeps AMD's standard limits** (162 W / 120 A / 180 A). Above those the 7800X3D only gets warmer - the cache sits on the cores and the temperature ends the boost before the power limit does.
+- **The curve starts at -20 instead of -30.** -20 runs on practically every 7800X3D; -30 tips over on many chips and ends in a restart loop. The warning above the Expert step now names the way back and the test that proves it.
+- **Boost override is capped at +100 MHz.** The 7800X3D tops out around 5.05 GHz, so anything above that is paid for in voltage without arriving as clock.
+
+#### Note
+- A network value the suite wrote for years is gone: it had no measurable effect. The value next to it stays, and it is now described correctly (it is a specific setting, not an "off" switch).
+
+## 8.6.44 - 2026-10-26
+
+### The game link arrives on its own
+
+#### Added
+- **The desktop link is read in both forms.** Windows stores a downloaded game link either as a shortcut or as a small internet shortcut file. Both now count when "Set game path" looks for the game, and both can be imported.
+- **Pasting no longer needs the keyboard.** The link field is filled from the clipboard the moment it opens, and "Set game path" gained an entry that takes the link straight from the clipboard - one click, no typing.
+- **A profile without a game name inherits the only game.** When the suite knows exactly one launch target - or the desktop holds exactly one game link - a profile named after its date starts with it. With several games the dialog still asks instead of guessing.
+
+## 8.6.43 - 2026-10-26
+
+### The game starts without typing the launcher link
+
+#### Added
+- **Launch Game finds the launcher link itself.** A profile that names no game - for example a session named after its date - now uses the launcher link of the only game registered in the suite. For Fortnite that link ships with the app, so such a profile starts without any dialog.
+- **Shortcuts are found, not pasted.** "Set game path" has a new entry that looks for the game's desktop shortcut on the desktop, the public desktop and next to OneDrive, and stores the link it carries. Profiles with a registered game path are filled at startup, without opening the dialog at all.
+
+#### Fixed
+- **Copying a shortcut now works in the link dialog.** Copying a desktop shortcut puts a file on the clipboard, not text - pasting into a text field therefore did nothing. The dialog reads a copied shortcut directly and offers its link.
+
+## 8.6.42 - 2026-10-26
+
+### The frame limiter can act while the game runs
+
+#### Added
+- **Set takes effect at once.** The frame limiter now writes both paths every time: the driver profile for every future start, and the live value through RivaTuner Statistics Server for the game that is already running. There is no switch to forget.
+- **The suite starts RivaTuner Statistics Server itself** when it is installed but not running. A live limit only reaches a game that starts after the server does, so waiting for the user to open another program was the reason a set value could do nothing.
+- **The status line says which effect really happened** - live now, or from the next game start, with the reason when one path was unavailable.
+
+#### Fixed
+- **Unlimited now removes every limit the tool has set.** Previously a system-wide limit could survive and keep capping the game, even though the tool reported it as removed.
+- **A game profile no longer caps the whole machine.** A value saved for one game was also written system-wide, so it applied to the desktop, the browser and every other game. It now applies to that game only.
+- **The status says when a value takes effect.** It no longer reads as "active now" when the driver applies it at the next game start.
+
+## 8.6.41 - 2026-10-26
+
+### The BIOS Tuner has a way back
+
+#### Added
+- **Restore backup.** One button in the BIOS Tuner writes the state from before the last change back to the BIOS. It names the file and its date first, then asks for confirmation; a restart applies the old values.
+- **A safety copy is taken automatically.** Before a profile is written, the current state is saved next to the export. This also covers the first run, where no earlier export existed and there was nothing to fall back to.
+
+#### Notes
+- **The button stays inactive until a safety copy exists.** The tooltip says why. Nothing is overwritten and no profile is deleted.
+
+## 8.6.40 - 2026-10-25
+
+### The engine finds its driver after an update
+
+#### Fixed
+- **A previous installation no longer blocks the start.** If the driver service still points at an older installation, the app now recognises that state, repairs its own service entry and starts the engine - instead of stopping with a driver error.
+
+#### Notes
+- **Nothing else changes.** Profiles, tuning and measurements stay exactly as they were; this release only removes that one start blocker.
+
 ## 8.6.39 - 2026-10-24
 
 ### The profile folder carries profiles, not the workshop
