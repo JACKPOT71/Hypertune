@@ -6,7 +6,7 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
-`v8.6.39` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.56` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 **[📸 View the screenshot gallery](SCREENSHOTS.md)**
 
@@ -34,8 +34,8 @@ One card, one goal: **APPLY EVERYTHING** runs the complete session in a single p
 
 **Smart Launch:** the game never starts untuned. If the tuning chain does not complete, the launch button does not fire. Games are registered as an executable, a launcher URI or a shortcut — remembered across reboots.
 
-### Frame limiter — driver level
-Per-game frame rate limiting through the same mechanism as the NVIDIA Control Panel slider (driver settings API). No injection, no overlay, no extra process. The set value is read back live from the driver and re-verified on every launch; orphaned entries from older versions are cleaned up automatically.
+### Frame limiter — stored for every start, live in the running game
+Per-game frame rate limiting through the same mechanism as the NVIDIA Control Panel slider (driver settings API). The set value is read back and re-verified on every launch; orphaned entries from older versions are cleaned up automatically. Because the driver applies a profile when the game starts, *Set* additionally hands the value to RivaTuner Statistics Server, which reaches the game that is already running - there is no switch to forget. Two things the status line always tells you: which path is active, and the frame rate measured inside the game. A limit can only lower the frame rate; if the game caps itself below your value, that measured number is what you see, not a promise.
 
 ### Benchmarks & frame limit advisor
 CapFrameX captures are imported automatically and reported honestly: average, 1 % low, latency. The advisor combines your monitor refresh rate with the measured numbers and returns a classified limit suggestion. Your own numbers can be entered manually; the capture folder is configurable with auto-detection.
@@ -91,15 +91,144 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 
 ---
 
-## Release Notes v8.6.39
+## Release Notes v8.6.56
 
-**The profile folder carries profiles, not the workshop**
-- **Four profiles instead of eighteen.** The shipped folder had collected every working copy of the master profile. What ships now is `Windows-Default` (the unload target), `14.10.2026` (master with a launch link), `Fortnite_Competitive_22.10.2026` (the active one) and `Auto Fortnite 360` (the Smart Auto-Pilot profile).
-- **Only the profiles travel.** Backups, the machine fingerprint and the author's active-profile marker stay on the build machine; the game sessions were cleaned the same way.
+**A labelled installer, and the tuning this machine runs**
+- **This build is unsigned, and it says so.** Windows will show "Unknown publisher" on first run; that is expected for this release. The release page names the SHA-256 and ships `SMARTSCREEN.md` with the two clicks it takes. Nothing here is called signed, verified or safe.
+- **The checksum travels with the download.** Every setup now gets a `<name>.sha256` file next to it, so the file can be checked before it runs. The release text names the same value.
+- **The tuning is unchanged.** `Jackpot_7800X3D_Fortnite`, `Jackpot_Hypertune.nip` and `Jackpot_Hypertune.pow` are the same files from 8.6.54: the 150-setting NVIDIA base profile, the 40-value power plan, the 1920 MHz GPU lock and the unlimited frame limiter. No profile was rebuilt for this release.
+- **Your install stays yours.** The setup replaces the program files; profiles, the active power plan and the licence stay in place.
+
+## Release Notes v8.6.54
+
+**The plan, the preset and the profile this machine runs**
+- **`Jackpot_Hypertune.pow` is the plan from the test machine.** All 40 values were read back from the active power scheme and compared with the file that ships: no difference. Import it once and the machine runs on exactly the plan the frame measurements were taken with.
+- **`Jackpot_Hypertune.nip` is the only Jackpot preset left.** One base profile with 150 NVIDIA settings, applied machine-wide instead of per game - the older Jackpot presets are gone from the folder, and an existing install removes them on update.
+- **`Jackpot_7800X3D_Fortnite` ships as a ready-made profile.** Power plan, GPU clock lock at 1920 MHz, Game Mode, the Competitive Gaming thread profile, the network profile, the Realtek/NIC/PCIe/MSR/USB chain and an unlimited frame limiter - the state this machine is tuned to, one click away.
+
+## Release Notes v8.6.53
+
+**Frame limiter: the executable that actually runs**
+- **The limit went into a profile the game never loads.** Fortnite starts as `FortniteClient-Win64-Shipping_EAC_EOS.exe`, not as `FortniteClient-Win64-Shipping.exe`. RTSS picks its profile by file name, so the value sat in a profile that never applies - the status line said "saved", the game stayed uncapped.
+- **Every executable of a game gets the value now.** The tool collects the resolved name, its siblings in the game folder, the running process and every profile that already exists for the family, and writes all of them.
+- **Unlimited clears the whole family.** A leftover cap in a second executable can no longer survive the reset and silently keep limiting.
+- **The read-back is per profile.** If one of them refuses the value, the message names it instead of reporting success.
+
+## Release Notes v8.6.52
+
+**Jackpot's NVIDIA presets on board - and a profile list that only shows current stands**
+- **`Jackpot_SmoothDX12.nip`.** DWM low latency on, three pre-rendered frames, a 10 GB shader cache and the highest refresh rate the display offers - built for even frame delivery instead of the highest peak.
+- **`Jackpot_MaxFPS.nip`.** V-Sync off, G-Sync off, texture filtering on High performance: a base profile that gets out of the engine's way.
+- **`Jackpot_LowLatency.nip`.** Ultra low latency mode with V-Sync and G-Sync off - the shortest path from input to picture.
+- **Each preset carries a base profile and the Fortnite executables**, so it applies to the game and not to the whole machine.
+- **The old master profile is out of the setup.** `14.10.2026` still sat in the list next to the current stands. It stays in the working tree as a test fixture only, and the installer removes it from the program folder on update - Inno never deletes files it did not install itself, so it would have stayed there forever.
+- **`Jackpot_Hypertune.pow` needs no second import.** The power plan has been in `pow/` since 8.6.51 - the same file, byte for byte.
+
+## Release Notes v8.6.51
+
+**BIOS Tuner: six more switches - and names that finally match the board**
+- **PCIe payload and read request at the maximum.** Both sat on `Auto`; the tuned profile now asks for 4096 bytes per transaction - fewer headers for the same amount of data.
+- **Network boot off.** LAN boot, the onboard PXE option ROM and the IPv4/IPv6 PXE stack are switched off, so the BIOS stops looking for a boot server while the machine starts.
+- **USB mass storage driver off.** The UEFI driver that offers USB sticks as boot devices is disabled; installing Windows from a stick means switching that one back on in the BIOS first.
+- **One sentence of warning comes with it.** The Optimized tier now says out loud that network boot and the USB mass storage driver are turned off - before anything is written.
+- **Three names corrected for AMD boards.** "Intel LAN Controller" also finds the Realtek controller of an AM5 board, "Enable AER Cap" finds the board's "Advanced Error Reporting (AER)", and "Thunderbolt Support" points at the real Thunderbolt/USB4 switch.
+- **A wrong similarity hit is closed.** "Thunderbolt Support" used to land on "Thunderbolt L1SS Support" only because the two names look alike; that block is named explicitly now.
+- **The Optimized tier carries 103 switches** - 96 before - and every one of them was checked against a real board export before it shipped.
+
+## Release Notes v8.6.50
+
+**Measurement run: the governor decides whether the numbers count**
+- **A/B in blocks, guided in plain words.** One button records one block, and the tick "lever is applied" decides which side it belongs to - a forgotten switch cannot silently flip the comparison.
+- **Warm-up and pauses are part of the run.** The first capture after a change is discarded instead of scored, and the card says so while it happens.
+- **Four numbers that show what you feel.** Spread, 99.9th percentile frame time and stutters per ten minutes now sit next to average and 1 % low.
+- **No verdict on moving ground.** The tool records the platform's clock floor during every capture. Two sides that stood on a different floor get "no verdict", with the numbers kept beside it as information.
+- **The clock can be pinned for a run - and released again.** One button puts back exactly the value that was there before.
+- **"No stutters" is a result, not missing data.** A measured zero no longer blocks the verdict.
+
+## Release Notes v8.6.49
+
+**BIOS Tuner: a way back you can read**
+- **Back to stock in one click.** The footer writes the state from before the first change back to the board.
+- **The stock state exists before you need it.** It is captured automatically before the first write.
+- **Readable names and a real list.** Stock, Basics, Optimized, Expert - each with date and file, no guessing from timestamps.
+- **No more silent undo.** Applying on a stale basis re-reads the BIOS first, because an import writes every row.
+
+## Release Notes v8.6.48
+
+**Revert Center: pick the step you want to go back**
+- **The folder is now a chronicle.** The sidebar button opens a timeline of every apply run with its steps, next to the registry snapshots - newest first.
+- **Undo single steps.** Tick the steps you want back instead of undoing everything; the rest of the profile stays applied.
+- **Back to a point in time.** Pick a run and roll back run by run to exactly that point - the newest run always goes first.
+- **Every step says how it returns.** Classic steps return to the value recorded before that run; hardware steps return to Windows default. The row names it.
+- **Nothing is undone twice.** Steps already taken back are locked, and a step with no way back is reported instead of counted as done.
+- **The emergency .reg files stay reachable.** The offline folder is still one button inside the window, for when the app itself does not start.
+
+## Release Notes v8.6.47
+
+**BIOS Tuner: the crest, and every switch in your hand**
+- **Your crest sits in the corner.** The round badge at the top left of the BIOS Tuner shows the suite's crest instead of the two letters. A stand-alone copy without the crest falls back to the letters, so nothing breaks.
+- **Every row has a tick.** Basics, Optimized and Expert now put a check box in front of every setting. Only ticked rows are written; everything unticked stays exactly as it is on the board.
+- **Every target value can be changed.** Double-click a target value to choose from the values the board actually offers, or type a number. Changed rows are marked in the table and tick themselves.
+- **One setting, one row in Expert.** When both the profile and the engine proposed a setting, Expert listed it twice - two rows with two values. Each setting now appears once.
+- **A contradiction is reported, not guessed.** If two ticked rows point at the same BIOS setting with different values, neither is written and the confirmation names it. Untick one of them and the other applies.
+- **The way back stays one click.** Every apply still writes its own backup first; "Restore backup" in the footer puts the previous state back into the BIOS.
+
+## Release Notes v8.6.46
+
+**Game Mode always releases what it paused**
+- **Turning Game Mode off during a game frees every paused program.** Programs could stay paused when a game kept running and the mode was switched off in between - they then had to be ended by hand. Everything the switch pauses is now released again.
+- **Pausing the same program twice no longer stacks.** A program that had been paused in more than one pass survived a single release and stayed frozen. The switch now checks what is already paused before it pauses anything, and it releases a program until it is verifiably running again.
+- **The automatic watcher acts on a change, not on a state.** It pauses when a game appears and releases when the game ends - switching Game Mode off during a game now stays off.
+
+## Release Notes v8.6.45
+
+**The frame limiter takes effect at once**
+- **"Set" changes the frame rate while the game is running.** Until now the value was only stored and took effect from the next launch - a limit set during a session never reached the running game. It does now, without restarting anything.
+- **"Unlimited" really removes every limit.** A limit left behind in the base profile could keep capping the game even after "Unlimited" was pressed. Every place the suite can write is cleared now.
+- **The status line says what is happening.** It shows the frame rate measured inside the running game and, when the running game is not ready for a change yet, tells you to restart it once instead of claiming success.
+- **The install-time self-check leaves an existing driver service alone.** It reports a driver that still points at an older installation instead of reconfiguring it mid-check. A missing service is still created, otherwise the check would have nothing to verify.
+
+### BIOS Tuner: one profile for the 7800X3D, less risk
+
+- **PBO keeps AMD's standard limits** (162 W / 120 A / 180 A). Above those the 7800X3D only gets warmer - the cache sits on the cores and the temperature ends the boost before the power limit does.
+- **The curve starts at -20 instead of -30.** -20 runs on practically every 7800X3D; -30 tips over on many chips and ends in a restart loop. The warning above the Expert step now names the way back and the test that proves it.
+- **Boost override is capped at +100 MHz.** The 7800X3D tops out around 5.05 GHz, so anything above that is paid for in voltage without arriving as clock.
+
+### Note
+
+- A network value the suite wrote for years is gone: it had no measurable effect. The value next to it stays, and it is now described correctly (it is a specific setting, not an "off" switch).
+
+## Release Notes v8.6.44
+
+**The game link arrives on its own**
+- **The desktop link is read in both forms.** Windows stores a downloaded game link either as a shortcut or as a small internet shortcut file. Both now count when "Set game path" looks for the game, and both can be imported.
+- **Pasting no longer needs the keyboard.** The link field is filled from the clipboard the moment it opens, and "Set game path" gained an entry that takes the link straight from the clipboard - one click, no typing.
+- **A profile without a game name inherits the only game.** When the suite knows exactly one launch target - or the desktop holds exactly one game link - a profile named after its date starts with it. With several games the dialog still asks instead of guessing.
+
+## Release Notes v8.6.43
+
+**The game starts without typing the launcher link**
+- **Launch Game finds the link itself.** A profile that names no game - for example a session named after its date - now uses the launcher link of the only game registered in the suite. For Fortnite that link ships with the app, so such a profile starts without any dialog.
+- **Shortcuts are found, not pasted.** "Set game path" has a new entry that looks for the game's desktop shortcut and stores the link it carries. Profiles with a registered game path are filled at startup, without opening the dialog at all.
+- **Copying a shortcut now works in the link dialog.** Copying a desktop shortcut puts a file on the clipboard, not text - pasting into a text field therefore did nothing. The dialog reads a copied shortcut directly and offers its link.
+
+## Release Notes v8.6.42
+
+**The frame limiter acts while the game runs**
+- **Set takes effect at once.** The frame limiter writes both paths every time: the driver profile for every future start, and the live value through RivaTuner Statistics Server for the game that is already running. No switch to forget.
+- **The suite starts RivaTuner Statistics Server itself** when it is installed but not running — a live limit only reaches a game that starts after the server does.
+- **The status line says which effect really happened** — live now, or from the next game start, with the reason when one path was unavailable.
+- **Unlimited removes every limit the tool has set.** A system-wide limit could previously survive and keep capping the game while the tool reported it as removed.
+- **A game profile no longer caps the whole machine.** A value saved for one game was also written system-wide, so it applied to the desktop, the browser and every other game.
+- **The status says when a value takes effect**, instead of reading as active now when the driver applies it at the next game start.
+
+**The BIOS Tuner has a way back**
+- **Restore backup.** One button writes the state from before the last change back to the BIOS. It names the file and its date first, then asks for confirmation; a restart applies the old values.
+- **A safety copy is taken automatically** before a profile is written, including the first run where no earlier export exists.
 
 ## What changed since 8.6.31
 
-**Eight versions in one upgrade**
+**What arrived since 8.6.31**
 - **Profiles are one file now.** "Share profile" writes the whole profile - tuning and game session - into a single `.hypertune` file. It is encoded, and import asks before replacing an existing name.
 - **Closing the suite gives the machine back.** Game Mode suspension and Thread Tuner priority, affinity and efficiency mode are restored on exit; nothing stays frozen or boosted.
 - **A saved profile keeps what you changed**, and Auto-Tune no longer resets a recorded choice.
@@ -143,7 +272,7 @@ Hypertune uses an open-source kernel driver (WinRing0 family) for protected hard
 ## FAQ
 
 **Will this trigger anti-cheat systems?**
-The tool uses documented operating system and driver interfaces wherever they exist. There is no injection, no hooking, no memory manipulation of other processes. The frame limiter uses the official driver settings interface — the same one the NVIDIA Control Panel uses. Kernel access is used to read and write your own hardware's configuration registers. Close the tool before gaming if you prefer a minimal process footprint.
+The tool uses documented operating system and driver interfaces wherever they exist. There is no injection, no hooking, no memory manipulation of other processes. The frame limiter uses the official driver settings interface — the same one the NVIDIA Control Panel uses. The live path does not inject anything itself: it hands the value to RivaTuner Statistics Server, which you install and run yourself. Kernel access is used to read and write your own hardware's configuration registers. Close the tool before gaming if you prefer a minimal process footprint.
 
 **Does it collect anything?**
 No telemetry, no accounts, no phone-home. The only network request is the daily version check against this repository.
