@@ -106,7 +106,6 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 - **The licence window says five days in every language.** The code already granted five days, but the interface said three - in all seven languages.
 - **An activated licence stays activated.** The update keeps the existing state; no re-activation is needed.
 - **Profiles stay shareable.** The profile format is unchanged, and a profile from another machine still imports.
-- **A developer path is no longer part of the build.** The benchmark capture fallback pointed at one machine's desktop and was a dead path everywhere else.
 
 ## Release Notes v8.6.54
 
@@ -244,8 +243,6 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 - **IPv6 is measured instead of rewritten**, the MTU probe can climb again, and German Windows no longer blinds the network check.
 - **The start board stops promising twice**; the banner and mascot ship with the setup again.
 - **Older Intel CPUs start again:** the build no longer requires AVX-512, and a failed driver check shows a dialog instead of a silent exit.
-
-**One thing to do:** a serial issued before 19.10.2026 needs one fresh activation after this update.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
