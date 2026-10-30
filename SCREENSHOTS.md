@@ -1,6 +1,6 @@
 # 📸 Screenshots
 
-Every image is a real window of Hypertune, captured at 1920×1080; the layout is unchanged in v8.6.56. Click one to view it full size.
+Every image is a real window of Hypertune, captured on a 1920×1080 desktop; the layout is unchanged in v8.6.56. Click one to view it full size.
 
 ## Start board
 
