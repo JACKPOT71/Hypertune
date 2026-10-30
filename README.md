@@ -49,6 +49,10 @@ Nothing here is a "tweak list". It is an engine: scan → decide → apply → v
 | Re-applies volatile settings at boot; process changes are journaled, and a crash guard releases anything left suspended. | No anti-cheat evasion — the tool configures your own machine, not the game. |
 | Measures latency, jitter and DPC/ISR; profiles are portable files you can export, share and import. | No telemetry, no account, no phone-home. The only request is the daily version check. |
 
+![Hypertune v8.6.56 dashboard](screenshots/01_start_board.png)
+
+*The v8.6.56 dashboard on the tuning machine: the readiness checklist, Smart Auto-Pilot and the active Jackpot 7800X3D Fortnite profile in one view.*
+
 The detailed boundaries are in [What Hypertune will never do](#what-hypertune-will-never-do).
 
 ---
