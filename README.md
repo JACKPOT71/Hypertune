@@ -1,6 +1,6 @@
 <div align="center">
 
-# ZENIT HYPERTUNE
+# HYPERTUNE
 
 **Jackpot's Hardware Register Engine — Hypertune Premium Edition**
 
