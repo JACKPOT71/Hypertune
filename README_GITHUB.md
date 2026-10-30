@@ -6,11 +6,26 @@
 
 *Full-stack Windows performance engineering for competitive gaming.*
 
+[![Latest release](https://img.shields.io/github/v/release/JACKPOT71/Hypertune?label=release&style=flat-square&color=8B6914)](https://github.com/JACKPOT71/Hypertune/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/JACKPOT71/Hypertune/total?style=flat-square&color=8B6914)](https://github.com/JACKPOT71/Hypertune/releases)
+![Windows 10 / 11](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D6?style=flat-square&logo=windows&logoColor=white)
+![x64](https://img.shields.io/badge/arch-x64-555?style=flat-square)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/M92HV4zfag)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-00457C?style=flat-square&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=DTMM65KUFT732)
+
+[**Download**](https://github.com/JACKPOT71/Hypertune/releases/latest) ·
+[**Screenshots**](SCREENSHOTS.md) ·
+[**Discord**](https://discord.gg/M92HV4zfag) ·
+[**Donate**](https://www.paypal.com/donate/?hosted_button_id=DTMM65KUFT732) ·
+[**Report a bug**](https://github.com/JACKPOT71/Hypertune/issues/new) ·
+[**Changelog**](CHANGELOG.md)
+
 `v8.6.56` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
-**[📸 View the screenshot gallery](SCREENSHOTS.md)**
-
 </div>
+
+> [!WARNING]
+> **This build is unsigned.** The setup ends in `-unsigned`; Windows shows "Unknown publisher" on first run. The release page lists the SHA-256, and [SMARTSCREEN.md](https://github.com/JACKPOT71/Hypertune/releases/latest/download/SMARTSCREEN.md) explains the two clicks. Nothing here is called signed, verified or safe.
 
 ---
 
