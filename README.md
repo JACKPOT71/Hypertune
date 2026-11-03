@@ -1,6 +1,6 @@
 <div align="center">
 
-# HYPERTUNE
+# ZENIT HYPERTUNE
 
 **Jackpot's Hardware Register Engine — Hypertune Premium Edition**
 
@@ -20,7 +20,7 @@
 [**Report a bug**](https://github.com/JACKPOT71/Hypertune/issues/new) ·
 [**Changelog**](CHANGELOG.md)
 
-`v8.6.56` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.62` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 </div>
 
@@ -120,6 +120,7 @@ A single rocker applies the full chain: boot-level hardware configuration, per-c
 1. Download `Hypertune_Setup_<version>-unsigned.exe` from [Releases](https://github.com/JACKPOT71/Hypertune/releases).
 2. Run it. The installer handles running instances, service state and the antivirus exclusion.
 3. Start Hypertune. The daily update check keeps you current automatically; updates install with one click from inside the app.
+4. For the complete first-run path - RTSS, Wireshark/Npcap, NetBench, frame cap and RXHP - read the two-page [manual](Manuals/Hypertune_Manual_Full_Potential_EN.pdf). It ships inside the installation folder in all seven tool languages.
 
 Your settings, snapshots and profiles live in `%LOCALAPPDATA%` and survive updates **and** uninstallation.
 
@@ -166,7 +167,7 @@ Why this matters: Hypertune configures **your own hardware and operating system*
 |---|---|
 | `latest.json` | Update manifest consumed by the in-app update check |
 | [Releases](https://github.com/JACKPOT71/Hypertune/releases) | Setup binaries per version, checksum listed in each release |
-| [CHANGELOG.md](CHANGELOG.md) | Full release history, including Release Notes v8.6.56 |
+| [CHANGELOG.md](CHANGELOG.md) | Full release history, including Release Notes v8.6.62 |
 
 ---
 
