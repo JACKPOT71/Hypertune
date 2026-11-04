@@ -20,7 +20,7 @@
 [**Report a bug**](https://github.com/JACKPOT71/Hypertune/issues/new) ·
 [**Changelog**](CHANGELOG.md)
 
-`v8.6.62` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.63` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 </div>
 
@@ -106,17 +106,21 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 
 ---
 
-## Release Notes v8.6.62
+## Release Notes v8.6.63
 
-**Npcap setup fixed, and a clearer latency report**
+**RX High Priority and the Fortnite latency test**
 
-- **Npcap setup fixed.** The helper installs Npcap through its normal window again. Wireshark and RTSS still install quietly.
-- **The latency report is clearer.** A skipped check no longer hides behind a count; the report says what was skipped. Checks this CPU cannot read are marked as not available, not as failures.
-- **Safety unchanged.** No thermal or power limit was changed. Undo still restores the previous state.
+- **The Fortnite latency test asks for the right order.** Start Fortnite, join a match, then press `START CAPTURE`. Starting the capture first could end with "server not found"; the window now names the working order everywhere.
+- **The language switch is complete.** Switching between English and German now updates the `NOTE`/`NOTIZ` label, the verdicts in the already-filled hop table, the segment line and the report headers. The English view no longer shows German table labels, and German shows the matching German labels.
+- **The NetBench window carries the Jackpot mark.** The round Jackpot icon now appears in the title bar and taskbar.
+- **RX High Priority works after a network-adapter reset.** Windows can move a network card to a new address when the adapter is re-detected. The step now checks the machine's current hardware instead of only the saved address, so it finds the RTL8125 again and can apply the priority ports.
+- **A failed read is not called "no card" anymore.** If the adapter cannot be read, the app says that. If an RTL8125 is present but cannot be addressed, it says that too. "No RTL8125" only appears when no matching card is present.
+- **No hooking, no injection, no game-file changes.** This build does not patch or inspect another program's code, read its memory, or change anti-cheat behaviour. It configures your own network adapter.
+- **Safety unchanged.** No thermal or power limit was changed. Every write is still checked by reading it back, and Undo restores the previous state.
 - **Your install stays yours.** Profiles, the active power plan and an activated licence stay in place.
 - **This build is unsigned, and it says so.** Windows will show "Unknown publisher" on first run; that is expected for this release. The release page names the SHA-256 and ships `SMARTSCREEN.md` with the two clicks it takes.
-- **SHA-256 of `Hypertune_Setup_8.6.62-unsigned.exe`:** `0f69200d167e36e8bd96ead029ff43cae4582d168db6ae8accce4c5eb7af43f9`. The `.sha256` file next to the setup carries the same value.
-- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune) · [Direct setup](https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.62/Hypertune_Setup_8.6.62-unsigned.exe).
+- **SHA-256 of `Hypertune_Setup_8.6.63-unsigned.exe`:** `fa5f07a9256c7140bd885aa5b32e13ddbc67a8d3360fe973ef0b4b92e65cf78d`. The `.sha256` file next to the setup carries the same value.
+- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune) · [Direct setup](https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.63/Hypertune_Setup_8.6.63-unsigned.exe).
 
 ## Older releases
 
