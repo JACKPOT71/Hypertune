@@ -2,6 +2,11 @@
 
 All notable changes to Hypertune are documented here, newest first. This is the public history: it describes what changed for the user, not how it is implemented. Detailed engineering notes stay with the source.
 
+## 8.6.63 - 2026-11-04
+### RX High Priority finds the Realtek network card again
+### Fortnite latency test: the right order
+### NetBench language switch and Jackpot icon
+
 ## 8.6.62 - 2026-11-03
 ### Npcap setup fixed
 ### Latency report clarified
