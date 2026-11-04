@@ -20,7 +20,7 @@
 [**Report a bug**](https://github.com/JACKPOT71/Hypertune/issues/new) ·
 [**Changelog**](CHANGELOG.md)
 
-`v8.6.62` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.63` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 </div>
 
@@ -167,7 +167,7 @@ Why this matters: Hypertune configures **your own hardware and operating system*
 |---|---|
 | `latest.json` | Update manifest consumed by the in-app update check |
 | [Releases](https://github.com/JACKPOT71/Hypertune/releases) | Setup binaries per version, checksum listed in each release |
-| [CHANGELOG.md](CHANGELOG.md) | Full release history, including Release Notes v8.6.62 |
+| [CHANGELOG.md](CHANGELOG.md) | Full release history, including Release Notes v8.6.63 |
 
 ---
 
