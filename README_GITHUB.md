@@ -20,7 +20,7 @@
 [**Report a bug**](https://github.com/JACKPOT71/Hypertune/issues/new) ·
 [**Changelog**](CHANGELOG.md)
 
-`v8.6.63` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.65` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 </div>
 
@@ -106,6 +106,19 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 
 ---
 
+## Release Notes v8.6.65
+
+**Priority boost is licensed - and the way back stays free**
+
+- **The Windows priority boost now sits behind the licence check.** Switching it off requires an active licence or a running trial. After the trial ends, the switch stays locked and no profile or automatic startup re-apply can turn it off.
+- **The way back is never locked.** Restoring the boost is always allowed. If the licence expires while the boost is off, Hypertune turns it back on instead of leaving the machine in that state.
+- **One rule for every path.** The card, a saved profile and the automatic startup re-apply follow the same licence rule. If the licence does not allow it, nothing is changed.
+- **The licence page applies immediately.** After activation the card is unlocked without restarting the app.
+- **Safe Mode now has an automatic way back.** Hypertune sets up the automatic return before it changes the boot setting; if that is not possible, nothing is changed. A leftover Safe Mode setting is cleared at the next start.
+- **This build is unsigned, and it says so.** Windows will show "Unknown publisher" on first run; that is expected for this release. The release page names the SHA-256 and ships `SMARTSCREEN.md` with the two clicks it takes.
+- **SHA-256 of `Hypertune_Setup_8.6.65-unsigned.exe`:** `d5dcc5c8940e763152640d1e35b70f0561d59db23e5efb3ad1a11b7f365c5ddb`. The `.sha256` file next to the setup carries the same value.
+- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune) · [Direct setup](https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.65/Hypertune_Setup_8.6.65-unsigned.exe).
+
 ## Release Notes v8.6.63
 
 **RX High Priority and the Fortnite latency test**
@@ -119,8 +132,8 @@ A read-only view shows what is actually active after every reboot: USB state, U0
 - **Safety unchanged.** No thermal or power limit was changed. Every write is still checked by reading it back, and Undo restores the previous state.
 - **Your install stays yours.** Profiles, the active power plan and an activated licence stay in place.
 - **This build is unsigned, and it says so.** Windows will show "Unknown publisher" on first run; that is expected for this release. The release page names the SHA-256 and ships `SMARTSCREEN.md` with the two clicks it takes.
-- **SHA-256 of `Hypertune_Setup_8.6.63-unsigned.exe`:** `fa5f07a9256c7140bd885aa5b32e13ddbc67a8d3360fe973ef0b4b92e65cf78d`. The `.sha256` file next to the setup carries the same value.
-- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune) · [Direct setup](https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.63/Hypertune_Setup_8.6.63-unsigned.exe).
+- **SHA-256 of `Hypertune_Setup_8.6.65-unsigned.exe`:** `fa5f07a9256c7140bd885aa5b32e13ddbc67a8d3360fe973ef0b4b92e65cf78d`. The `.sha256` file next to the setup carries the same value.
+- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune) · [Direct setup](https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.63/Hypertune_Setup_8.6.65-unsigned.exe).
 
 ## Older releases
 
