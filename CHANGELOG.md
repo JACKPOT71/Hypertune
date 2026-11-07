@@ -2,6 +2,11 @@
 
 All notable changes to Hypertune are documented here, newest first. This is the public history: it describes what changed for the user, not how it is implemented. Detailed engineering notes stay with the source.
 
+## 8.6.65 - 2026-11-06
+### Priority boost requires a licence
+### The way back stays free
+### Safe Mode with an automatic way back
+
 ## 8.6.63 - 2026-11-04
 ### RX High Priority finds the Realtek network card again
 ### Fortnite latency test: the right order
