@@ -1,10 +1,8 @@
-### Priority boost and Safe Mode improvements
+### The full view is easier to use
 
-- **The Windows priority boost now behaves consistently.** The card, a saved profile and the automatic startup re-apply show the same state.
-- **The way back is always available.** Restoring the boost is a single step and stays available when the app closes or restarts.
-- **The card updates immediately.** After a change, it shows the current state without restarting the app.
+- **The dashboard shows one state per game.** Each game card keeps its own switch, and the status line says in plain words what happens next ("switch on, then start the game"). Nothing changes in the background without the switch.
+- **Tuning steps explain themselves.** Every step on the tuning page carries a short sentence about what it does and when it applies. Steps that do not fit this machine stay visible but switched off, so the list never looks broken.
+- **Saved profiles match what was applied.** A profile built from the overview carries the same choices that the overview applied. Loading it later restores the same view, including the network choices that belong to it.
 
-- **Safe Mode now has an automatic way back.** Hypertune sets up the automatic return before it changes the boot setting; if that is not possible, nothing is changed. A leftover Safe Mode setting is cleared at the next start.
 - **This build is unsigned, and it says so.** Windows will show "Unknown publisher" on first run; that is expected for this release. The release page names the SHA-256 and ships `SMARTSCREEN.md` with the two clicks it takes.
-- **SHA-256 of `Hypertune_Setup_8.6.65-unsigned.exe`:** `d5dcc5c8940e763152640d1e35b70f0561d59db23e5efb3ad1a11b7f365c5ddb`. The `.sha256` file next to the setup carries the same value.
-- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune) · [Direct setup](https://github.com/JACKPOT71/Hypertune/releases/download/v8.6.65/Hypertune_Setup_8.6.65-unsigned.exe).
+- **Download:** [Hypertune on GitHub](https://github.com/JACKPOT71/Hypertune). The setup and its SHA-256 appear on the release page for v8.6.74.
