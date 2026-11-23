@@ -23,7 +23,7 @@ A) UPDATE UEBER EINE AELTERE INSTALLATION (Bestandsnutzer):
        b) "Scan Hardware Radar" ausfuehren.
        c) "Save Startup Profile" klicken und danach NEU STARTEN.
        Grund: aeltere Versionen konnten Startup-Profile OHNE die PCIe-
-       Adressen (BDFs) speichern - solche Profile haben bei jedem Boot
+       Adressen speichern - solche Profile haben bei jedem Boot
        stillschweigend nichts getan. Der erneute Scan + Speichern
        schreibt ein vollstaendiges, funktionierendes Profil.
     5. Hinweis: Die Sprache wird beim Kopieren auf Englisch zurueck-
@@ -42,7 +42,7 @@ B) NEUINSTALLATION:
        b) Tweaks nach Wunsch setzen.
        c) "Save Startup Profile" klicken - das Profil MUSS aus einem
           frischen Scan heraus gespeichert werden (speichert die PCIe-
-          Busadressen/BDFs deiner Hardware). Nach Hardware-Aenderungen
+          Busadressen deiner Hardware). Nach Hardware-Aenderungen
           einfach neu scannen und neu speichern.
        d) Neu starten - das Profil wird dann bei jeder Anmeldung
           automatisch ausgefuehrt (Task: IMOD_Startup_Task).
@@ -144,7 +144,7 @@ A) UPDATING AN EXISTING INSTALLATION:
        b) Run "Scan Hardware Radar".
        c) Click "Save Startup Profile", then REBOOT.
        Reason: older versions could save startup profiles WITHOUT the
-       PCIe addresses (BDFs) - such profiles silently did nothing on
+       PCIe addresses - such profiles silently did nothing on
        every boot. Re-scanning + re-saving writes a complete, working
        profile.
     5. Note: copying resets the language to English (neutral
@@ -162,7 +162,7 @@ B) FRESH INSTALLATION:
        a) Run "Scan Hardware Radar" (reads your hardware).
        b) Apply the tweaks you want.
        c) Click "Save Startup Profile" - the profile MUST be saved from
-          a fresh scan (stores the PCIe bus addresses/BDFs of your
+          a fresh scan (stores the PCIe bus addresses of your
           hardware). After hardware changes, simply re-scan and re-save.
        d) Reboot - the profile is then applied automatically on every
           login (task: IMOD_Startup_Task).
@@ -227,7 +227,7 @@ WIN TWEAK VERIFIER - TWO TIERS:
 
 Tier 1 (always available, no extra setup):
   The verifier statically analyzes the Windows drivers with pefile and
-  capstone: it searches the driver code for the registry value name,
+  capstone: it searches the driver code for the setting name,
   finds the code cross-references and disassembles their surroundings.
   A "CODE REFERENCE" result means: real driver code references this
   value near registry-reading logic. Additionally, the registry
