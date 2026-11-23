@@ -20,7 +20,7 @@
 [**Report a bug**](https://github.com/JACKPOT71/Hypertune/issues/new) ·
 [**Changelog**](CHANGELOG.md)
 
-`v8.6.65` · Windows 10 / 11 · x64 · Installer & Auto-Update
+`v8.6.74` · Windows 10 / 11 · x64 · Installer & Auto-Update
 
 </div>
 
@@ -49,9 +49,9 @@ Nothing here is a "tweak list". It is an engine: scan → decide → apply → v
 | Re-applies volatile settings at boot; process changes are journaled, and a crash guard releases anything left suspended. | No anti-cheat evasion — the tool configures your own machine, not the game. |
 | Measures latency, jitter and DPC/ISR; profiles are portable files you can export, share and import. | No telemetry, no account, no phone-home. The only request is the daily version check. |
 
-![Hypertune v8.6.56 dashboard](screenshots/01_start_board.png)
+![Hypertune v8.6.74 overview](screenshots/01_overview_v874.png)
 
-*The v8.6.56 dashboard on the tuning machine: the readiness checklist, Smart Auto-Pilot and the active Jackpot 7800X3D Fortnite profile in one view.*
+*The v8.6.74 overview on the tuning machine: choose game and wish profile, then arm or launch — one state per game.*
 
 The detailed boundaries are in [What Hypertune will never do](#what-hypertune-will-never-do).
 
@@ -167,7 +167,7 @@ Why this matters: Hypertune configures **your own hardware and operating system*
 |---|---|
 | `latest.json` | Update manifest consumed by the in-app update check |
 | [Releases](https://github.com/JACKPOT71/Hypertune/releases) | Setup binaries per version, checksum listed in each release |
-| [CHANGELOG.md](CHANGELOG.md) | Full release history, including Release Notes v8.6.65 |
+| [CHANGELOG.md](CHANGELOG.md) | Full release history, including Release Notes v8.6.74 |
 
 ---
 
