@@ -2,6 +2,41 @@
 
 All notable changes to Hypertune are documented here, newest first. This is the public history: it describes what changed for the user, not how it is implemented. Detailed engineering notes stay with the source.
 
+## 8.6.74 - 2026-11-23
+### The dashboard shows one state per game
+### Tuning steps explain themselves
+### Saved profiles match what was applied
+
+## 8.6.73 - 2026-11-16
+### Network values are saved with the profile
+### Applying asks before it touches a profile
+### The network page shows what is stored
+
+## 8.6.71 - 2026-11-15
+### Hardware that is not installed stays out of the way
+### Apply all and saved profiles agree
+### An interrupted start recovers cleanly
+### NVIDIA profiles are named by what they do
+
+## 8.6.70 - 2026-11-12
+### Network and power tools complete again
+### The startup chain is managed in the overview
+### Safe Mode keeps a way back
+### Driver hand-off recovers without a reboot
+
+## 8.6.69 - 2026-11-12
+### A sharper cockpit, a quieter language switch
+### Seven languages refresh in place
+
+## 8.6.68 - 2026-11-10
+### The view switch moved to the header
+### The sidebar keeps its tools together
+
+## 8.6.66 - 2026-11-10
+### The new interface is the default
+### All nine pages in the full edition
+### Hardware writes wait while the anti-cheat is running
+
 ## 8.6.65 - 2026-11-06
 ### Priority boost now behaves consistently
 ### The way back stays available
